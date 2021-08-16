@@ -3,7 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31019.35
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeCrypt", "MeCrypt\MeCrypt.csproj", "{1537B23C-CB82-40D4-B2CF-5FBA8D650692}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeCrypt", "MeCrypt\MeCrypt.csproj", "{1537B23C-CB82-40D4-B2CF-5FBA8D650692}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeCrypt.DataAccess", "MeCrypt.DataAccess\MeCrypt.DataAccess.csproj", "{997391BE-ADE6-4CAF-9779-AE31A169AF89}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClientApp", "ClientApp", "{93202819-6F8E-489C-8050-146FD785BD1C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataAccess", "DataAccess", "{5AFB50E8-8104-42E3-A0F2-957561960804}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{BF37974D-D471-4DCE-8142-588215737D94}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{9CB5DA3E-03A0-41EE-B751-5F321B32331C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{457F60E7-E148-44AC-86AF-670CF07FA85B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +27,17 @@ Global
 		{1537B23C-CB82-40D4-B2CF-5FBA8D650692}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1537B23C-CB82-40D4-B2CF-5FBA8D650692}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1537B23C-CB82-40D4-B2CF-5FBA8D650692}.Release|Any CPU.Build.0 = Release|Any CPU
+		{997391BE-ADE6-4CAF-9779-AE31A169AF89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{997391BE-ADE6-4CAF-9779-AE31A169AF89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{997391BE-ADE6-4CAF-9779-AE31A169AF89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{997391BE-ADE6-4CAF-9779-AE31A169AF89}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1537B23C-CB82-40D4-B2CF-5FBA8D650692} = {93202819-6F8E-489C-8050-146FD785BD1C}
+		{997391BE-ADE6-4CAF-9779-AE31A169AF89} = {5AFB50E8-8104-42E3-A0F2-957561960804}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {54639FF8-71E5-4615-B80C-78081E227C3B}
