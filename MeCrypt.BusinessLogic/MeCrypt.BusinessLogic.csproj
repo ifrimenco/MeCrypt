@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Implementations\UserAccountService\Mappings\" />
+    <Folder Include="Implementations\UserAccountService\Validations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="FluentValidation" Version="10.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Domain.DataObjects\MeCrypt.DataObjects.csproj" />
+    <ProjectReference Include="..\MeCrypt.DataAccess\MeCrypt.DataAccess.csproj" />
+  </ItemGroup>
+
+</Project>

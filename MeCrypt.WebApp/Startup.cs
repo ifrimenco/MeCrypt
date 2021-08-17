@@ -54,7 +54,7 @@ namespace MeCrypt
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
             app.UseSpa(spa =>
