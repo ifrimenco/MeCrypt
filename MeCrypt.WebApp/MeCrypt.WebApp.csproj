@@ -21,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\UserAccount\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Domain.DataObjects\MeCrypt.DataObjects.csproj" />
     <ProjectReference Include="..\MeCrypt.BusinessLogic\MeCrypt.BusinessLogic.csproj" />
   </ItemGroup>

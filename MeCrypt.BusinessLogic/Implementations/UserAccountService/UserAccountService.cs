@@ -2,7 +2,11 @@
 
 namespace MeCrypt.BusinessLogic
 {
-    public class UserAccountService
+    public class UserAccountService : BaseService
     {
+        public UserAccountService(ServiceDependencies serviceDependencies)
+            :   base(serviceDependencies)
+        {
+        }
     }
 }

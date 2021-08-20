@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Implementations\UsersService\Mappings\" />
+    <Folder Include="Implementations\UsersService\Validations\" />
     <Folder Include="Implementations\UserAccountService\Mappings\" />
     <Folder Include="Implementations\UserAccountService\Validations\" />
   </ItemGroup>
