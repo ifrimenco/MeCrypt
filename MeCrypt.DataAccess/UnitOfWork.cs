@@ -1,5 +1,6 @@
 ﻿using MeCrypt.Common;
-using MeCrypt.DataAccess.DataAccess.EF.Entities;
+using MeCrypt.DataAccess.EF;
+using MeCrypt.DataAccess.EF.Entities;
 using System;
 
 namespace MeCrypt.DataAccess

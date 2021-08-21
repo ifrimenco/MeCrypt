@@ -1,6 +1,7 @@
 CREATE TABLE [Users] (
 	Id UNIQUEIDENTIFIER NOT NULL,
 	Email NVARCHAR(100) NOT NULL,
+	PasswordHash NVARCHAR(150) NOT NULL,
 	FirstName NVARCHAR(40) NOT NULL,
 	LastName NVARCHAR(40) NOT NULL
 
@@ -40,13 +41,15 @@ CREATE TABLE [Role_Permissions] (
 );
 
 /* pana aici e rulat */
-
 CREATE TABLE [Rooms] (
-	Id UNIQUEIDENTIFIER NOT NULL,	
-	MessageLifespan INT NULL,
+	Id UNIQUEIDENTIFIER NOT NULL,
+	CreatorId UNIQUEIDENTIFIER NOT NULL,
+	MessageLifespan INT NOT NULL
 
+	-- posibil de mai adaugat coloane
 	CONSTRAINT PK_Rooms PRIMARY KEY (Id)
-);
+	CONSTRAINT FK_Rooms_CreatorUsers FOREIGN KEY (CreatorId) REFERENCES [Users](Id),
+)
 
 CREATE TABLE [User_Rooms] (
 	UserId UNIQUEIDENTIFIER NOT NULL,
@@ -59,10 +62,16 @@ CREATE TABLE [User_Rooms] (
 
 CREATE TABLE [Messages] (
 	Id UNIQUEIDENTIFIER NOT NULL,	
+	CryptedContent NVARCHAR(MAX) NOT NULL,
+	DateTimeSent DATETIMEOFFSET NOT NULL, -- sa argumentez de ce am folosit DateTimeOffSet
+	Lifespan INT NOT NULL,
+	-- posibil de mai adaugat coloane
 );
 
-CREATE TABLE [Secrets] (
-	Id UNIQUEIDENTIFIER NOT NULL,
-	DealerId UNIQUEIDENTIFIER NOT NULL /* posibil sa fie optional */
-);
+-- CREATE TABLE [Secrets] (
+-- 	Id UNIQUEIDENTIFIER NOT NULL,
+-- 	DealerId UNIQUEIDENTIFIER NOT NULL /* posibil sa fie optional */
+-- );
 
+
+CREATE TABLE [UserRooms] ()()

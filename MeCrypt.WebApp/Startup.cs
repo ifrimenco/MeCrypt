@@ -1,7 +1,9 @@
 using MeCrypt.BusinessLogic;
 using MeCrypt.DataAccess;
+using MeCrypt.DataAccess.EF;
 using MeCrypt.DataObjects.DTOs;
 using MeCrypt.WebApp.Code.Base;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,8 +13,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Linq;
+using System.Text;
 
 namespace MeCrypt
 {
@@ -40,20 +44,23 @@ namespace MeCrypt
 
             services.AddScoped<UnitOfWork>(); // de ce? - sa stiu sa explic
 
-            services.AddScoped(s => // adding current user service
+            var key = Encoding.ASCII.GetBytes(Configuration.GetValue<string>("AppSettings:Secret"));
+
+            services.AddAuthentication(auth =>
             {
-                var accessor = s.GetService<IHttpContextAccessor>();
-                var httpContext = accessor.HttpContext;
-                var claims = httpContext.User.Claims;
-
-                var userIdClaim = claims?.FirstOrDefault(c => c.Type == "Id")?.Value;
-                var isParsingSuccessful = Guid.TryParse(userIdClaim, out Guid id);
-
-                return new CurrentUserDto
+                auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(jwt => 
+            {
+                jwt.RequireHttpsMetadata = false;
+                jwt.SaveToken = true;
+                jwt.TokenValidationParameters = new TokenValidationParameters
                 {
-                    Id = id,
-                    IsAuthenticated = httpContext.User.Identity.IsAuthenticated,
-                    Email = httpContext.User.Identity.Name
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
                 };
             });
 
@@ -94,6 +101,9 @@ namespace MeCrypt
             app.UseSpaStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

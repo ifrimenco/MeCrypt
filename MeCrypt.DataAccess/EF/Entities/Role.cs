@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace MeCrypt.DataAccess.DataAccess.EF.Entities
+namespace MeCrypt.DataAccess.EF.Entities
 {
-    public partial class Role : IEntity // IEntity nu e adaugat de context, e adaugat manual de mine
+    public partial class Role : IEntity
     {
         public Role()
         {

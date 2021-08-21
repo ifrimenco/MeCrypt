@@ -1,4 +1,5 @@
 ﻿using MeCrypt.Common;
+using MeCrypt.DataAccess.EF;
 using System.Linq;
 
 namespace MeCrypt.DataAccess

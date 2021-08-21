@@ -2,16 +2,21 @@
 using MeCrypt.DataObjects.DTOs;
 using MeCrypt.WebApp.Code.Base;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace MeCrypt.Controllers
 {
     [ApiController]
+    [Route("[controller]")]
     public class UserAccountController : BaseController
     {
 
@@ -23,89 +28,79 @@ namespace MeCrypt.Controllers
             this.Service = service;
         }
 
-        //[HttpGet]
-        //public IActionResult Register()
-        //{
-        //    var model = new RegisterModel();
-
-        //    return View("Register", model);
-        //}
-
-        //[HttpPost]
-        //public IActionResult Register(RegisterModel model)
-        //{
-        //    if (model == null)
-        //    {
-        //        return View("Error_NotFound");
-        //    }
-
-        //    Service.RegisterNewUser(model);
-
-        //    return RedirectToAction("Index", "Home");
-        //}
-
-        //[HttpGet]
-        //public IActionResult Login()
-        //{
-        //    var model = new LoginModel();
-
-        //    return View(model);
-        //}
-
-        //[HttpPost]
-        //public async Task<IActionResult> Login(LoginModel model)
-        //{
-        //    var user = Service.Login(model.Email, model.Password);
-
-        //    if (!user.IsAuthenticated)
-        //    {
-        //        model.AreCredentialsInvalid = true;
-        //        return View(model);
-        //    }
-
-        //    await LogIn(user);
-
-        //    return RedirectToAction("Index", "Home");
-        //}
-
-        //[HttpGet]
-        //public async Task<IActionResult> Logout()
-        //{
-        //    await LogOut();
-
-        //    return RedirectToAction("Index", "Home");
-        //}
-
-        //[HttpGet]
-        //public IActionResult DemoPage()
-        //{
-        //    var model = Service.GetUsers();
-
-        //    return View(model);
-        //}
-
-        private async Task LogIn(CurrentUserDto user)
+        [AllowAnonymous]
+        [HttpPost("Login")]
+        public IActionResult Login([FromBody] LoginDto model)
         {
-            var claims = new List<Claim>
+            var user = Service.Login(model.Email, model.Password);
+
+            if (user == null)
+                return BadRequest("Email or password is incorrect");
+
+            
+
+            // return basic user info (without password) and token to store client side
+            return Ok(new
             {
-                new Claim("Id", user.Id.ToString()),
-                new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
-                new Claim(ClaimTypes.Email, user.Email),
-            };
-
-            user.Roles.ForEach(role => claims.Add(new Claim(ClaimTypes.Role, role)));
-
-            var identity = new ClaimsIdentity(claims, "Cookies");
-            var principal = new ClaimsPrincipal(identity);
-
-            await HttpContext.SignInAsync(
-                    scheme: "MeCryptCookies",
-                    principal: principal);
+                Id = user.Id,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Token = getToken(user.Id)
+            });
         }
+        [AllowAnonymous]
+        [HttpPost("Register")]
+        public IActionResult Register([FromBody] RegisterDto model)
+        {
+            try
+             {
+                // save 
+                var user = Service.Register(model);
+                
+                if (user == null)
+                {
+                    return BadRequest("E-mail Already Used!");
+                }
 
+                user = Service.Login(model.Email, model.Password);
+                return Ok(new
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Token = getToken(user.Id)
+                });
+            }
+            catch (Exception ex)
+            {
+                // return error message if there was an exception
+                return BadRequest(ex.Message);
+            }
+        }
         private async Task LogOut()
         {
             await HttpContext.SignOutAsync(scheme: "MeCryptCookies");
+        }
+
+        private string getToken(Guid userId)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(configuration.GetSection("AppSettings").GetSection("Secret").Value);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, userId.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            return tokenString;
         }
     }
 }

@@ -6,12 +6,12 @@ using System.Collections.Generic;
 
 namespace MeCrypt.DataAccess.EF.Entities
 {
-    public partial class UserRole : IEntity
+    public partial class UserRoom : IEntity
     {
         public Guid UserId { get; set; }
-        public int RoleId { get; set; }
+        public Guid RoomId { get; set; }
 
-        public virtual Role Role { get; set; }
+        public virtual Room Room { get; set; }
         public virtual User User { get; set; }
     }
 }

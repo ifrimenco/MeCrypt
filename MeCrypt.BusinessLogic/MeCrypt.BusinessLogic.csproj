@@ -5,9 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Implementations\UserAccountService\Mappings\" />
-    <Folder Include="Implementations\UserAccountService\Validations\" />
-    <Folder Include="Implementations\UsersService\Validations\" />
+    <Compile Remove="Implementations\UserAccountService\Validations\**" />
+    <Compile Remove="Implementations\UsersService\Validations\**" />
+    <EmbeddedResource Remove="Implementations\UserAccountService\Validations\**" />
+    <EmbeddedResource Remove="Implementations\UsersService\Validations\**" />
+    <None Remove="Implementations\UserAccountService\Validations\**" />
+    <None Remove="Implementations\UsersService\Validations\**" />
   </ItemGroup>
 
   <ItemGroup>

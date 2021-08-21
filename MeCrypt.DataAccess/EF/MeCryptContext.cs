@@ -1,11 +1,11 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using MeCrypt.DataAccess.DataAccess.EF.Entities;
+using MeCrypt.DataAccess.EF.Entities;
 
 #nullable disable
 
-namespace MeCrypt.DataAccess
+namespace MeCrypt.DataAccess.EF
 {
     public partial class MeCryptContext : DbContext
     {
@@ -18,16 +18,21 @@ namespace MeCrypt.DataAccess
         {
         }
 
+        public virtual DbSet<Message> Messages { get; set; }
         public virtual DbSet<Permission> Permissions { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<RolePermission> RolePermissions { get; set; }
+        public virtual DbSet<Room> Rooms { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
+        public virtual DbSet<UserRoom> UserRooms { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
+                // de scos din configuratie
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=MeCrypt;Trusted_Connection=True;");
             }
         }
@@ -35,6 +40,13 @@ namespace MeCrypt.DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+            modelBuilder.Entity<Message>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.Property(e => e.CryptedContent).IsRequired();
+            });
 
             modelBuilder.Entity<Permission>(entity =>
             {
@@ -74,9 +86,20 @@ namespace MeCrypt.DataAccess
                     .HasConstraintName("FK_RolePermissions_Roles");
             });
 
+            modelBuilder.Entity<Room>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.HasOne(d => d.Creator)
+                    .WithMany(p => p.CreatedRooms)
+                    .HasForeignKey(d => d.CreatorId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Rooms_CreatorUsers");
+            });
+
             modelBuilder.Entity<User>(entity =>
             {
-                entity.HasKey("Id");
+                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Email)
                     .IsRequired()
@@ -89,6 +112,8 @@ namespace MeCrypt.DataAccess
                 entity.Property(e => e.LastName)
                     .IsRequired()
                     .HasMaxLength(40);
+
+                entity.Property(e => e.PasswordHash).HasMaxLength(150);
             });
 
             modelBuilder.Entity<UserRole>(entity =>
@@ -109,6 +134,26 @@ namespace MeCrypt.DataAccess
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_UserRoles_Users");
+            });
+
+            modelBuilder.Entity<UserRoom>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.RoomId })
+                    .HasName("PK_UserRooms");
+
+                entity.ToTable("User_Rooms");
+
+                entity.HasOne(d => d.Room)
+                    .WithMany(p => p.UserRooms)
+                    .HasForeignKey(d => d.RoomId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserRooms_Rooms");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserRooms)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserRooms_Users");
             });
 
             OnModelCreatingPartial(modelBuilder);

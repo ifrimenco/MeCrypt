@@ -1,14 +1,15 @@
 ﻿using MeCrypt.DataObjects.DTOs;
+using Microsoft.Extensions.Configuration;
 
 namespace MeCrypt.WebApp.Code.Base
 {
     public class ControllerDependencies
     {
-        public CurrentUserDto CurrentUser { get; set; }
+        public IConfiguration Configuration { get; set; }
 
-        public ControllerDependencies(CurrentUserDto currentUser)
+        public ControllerDependencies(IConfiguration configuration)
         {
-            this.CurrentUser = currentUser;
+            this.Configuration = configuration;
         }
     }
 }

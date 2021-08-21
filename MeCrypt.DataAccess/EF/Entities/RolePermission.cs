@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace MeCrypt.DataAccess.DataAccess.EF.Entities
+namespace MeCrypt.DataAccess.EF.Entities
 {
     public partial class RolePermission : IEntity
     {

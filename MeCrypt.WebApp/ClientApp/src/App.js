@@ -5,6 +5,8 @@ import { Home } from './components/Home';
 import { FetchData } from './components/FetchData';
 import { Counter } from './components/Counter';
 import { UsersTable } from './components/UsersTable';
+import { LoginPage } from './components/Login';
+import { RegisterPage } from './components/Register';
 
 import './custom.css'
 
@@ -18,6 +20,8 @@ export default class App extends Component {
         <Route path='/counter' component={Counter} />
         <Route path='/fetch-data' component={FetchData} />
         <Route path='/adminPage' component={UsersTable} />
+        <Route path='/loginPage' component={LoginPage} />
+        <Route path='/registerPage' component={RegisterPage} />
       </Layout>
     );
   }

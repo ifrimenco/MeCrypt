@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using MeCrypt.DataAccess.DataAccess.EF.Entities;
+using MeCrypt.DataAccess.EF.Entities;
 using MeCrypt.DataObjects.DTOs;
 using System;
 
