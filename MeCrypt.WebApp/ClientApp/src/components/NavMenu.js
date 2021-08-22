@@ -11,6 +11,7 @@ export const NavMenu = (props) => {
 
     const onLogout = () => {
         authenticationService.logout();
+        window.location.reload();
     }
 
     return (
