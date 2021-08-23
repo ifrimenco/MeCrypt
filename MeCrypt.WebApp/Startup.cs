@@ -16,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 
 namespace MeCrypt
@@ -32,7 +33,6 @@ namespace MeCrypt
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); // ce face?
 
             services.AddControllersWithViews();
@@ -75,6 +75,22 @@ namespace MeCrypt
                 configuration.RootPath = "ClientApp/build";
             });
 
+            services.AddScoped(s =>
+            {
+                var accessor = s.GetService<IHttpContextAccessor>();
+                var httpContext = accessor.HttpContext;
+
+                var userIdClaim = httpContext.User.FindFirst("Id")?.Value;
+                var isParsingSuccessful = Guid.TryParse(userIdClaim, out Guid id);
+
+                return new CurrentUserDto
+                {
+                    Id = id,
+                    IsAuthenticated = httpContext.User.Identity.IsAuthenticated,
+                    Email = httpContext.User.Identity.Name,
+                    Permissions = httpContext.User.FindAll("Permissions")?.Select(u => Int32.Parse(u.Value)).ToList()
+                };
+            });
 
             services.AddScoped<ControllerDependencies>();
             services.AddScoped<ServiceDependencies>();

@@ -30,6 +30,15 @@ namespace MeCrypt.DataAccess
         private IRepository<RolePermission> rolePermissions;
         public IRepository<RolePermission> RolePermissions => rolePermissions ?? (rolePermissions = new BaseRepository<RolePermission>(Context));
 
+        private IRepository<Message> messages;
+        public IRepository<Message> Messages => messages ?? (messages = new BaseRepository<Message>(Context));
+
+        private IRepository<Room> rooms;
+        public IRepository<Room> Rooms => rooms ?? (rooms = new BaseRepository<Room>(Context));
+
+        private IRepository<UserRoom> userRooms;
+        public IRepository<UserRoom> UserRooms => userRooms ?? (userRooms = new BaseRepository<UserRoom>(Context));
+
         public void SaveChanges()
         {
             Context.SaveChanges();

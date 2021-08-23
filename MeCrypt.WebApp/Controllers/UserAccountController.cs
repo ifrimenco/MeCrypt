@@ -1,5 +1,6 @@
 ﻿using MeCrypt.BusinessLogic;
 using MeCrypt.DataObjects.DTOs;
+using MeCrypt.DataObjects.Enums;
 using MeCrypt.WebApp.Code.Base;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -17,6 +18,7 @@ namespace MeCrypt.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class UserAccountController : BaseController
     {
 
@@ -32,21 +34,23 @@ namespace MeCrypt.Controllers
         [HttpPost("Login")]
         public IActionResult Login([FromBody] LoginDto model)
         {
+            if (currentUser.IsAuthenticated)
+            {
+                return BadRequest("User Already logged in");
+            }
+
             var user = Service.Login(model.Email, model.Password);
 
             if (user == null)
                 return BadRequest("Email or password is incorrect");
 
-            
-
             // return basic user info (without password) and token to store client side
             return Ok(new
             {
-                Id = user.Id,
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Token = getToken(user.Id)
+                Token = LogIn(user)
             });
         }
         [AllowAnonymous]
@@ -54,23 +58,28 @@ namespace MeCrypt.Controllers
         public IActionResult Register([FromBody] RegisterDto model)
         {
             try
-             {
+            {
+                if (currentUser.IsAuthenticated)
+                {
+                    return BadRequest("User Already logged in");
+                }
+
                 // save 
                 var user = Service.Register(model);
-                
+
                 if (user == null)
                 {
                     return BadRequest("E-mail Already Used!");
                 }
 
-                user = Service.Login(model.Email, model.Password);
+                var userDto = Service.Login(model.Email, model.Password);
+
                 return Ok(new
                 {
-                    Id = user.Id,
                     Email = user.Email,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
-                    Token = getToken(user.Id)
+                    Token = LogIn(userDto)
                 });
             }
             catch (Exception ex)
@@ -84,22 +93,29 @@ namespace MeCrypt.Controllers
             await HttpContext.SignOutAsync(scheme: "MeCryptCookies");
         }
 
-        private string getToken(Guid userId)
+
+        private string LogIn(CurrentUserDto user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(configuration.GetSection("AppSettings").GetSection("Secret").Value);
+
+            var claims = new ClaimsIdentity(new Claim[]
+            {
+                    new Claim("Id", user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.Email)
+            });
+
+            user.Permissions.ForEach(permission => claims.AddClaim(new Claim("Permission", permission.ToString())));
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, userId.ToString())
-                }),
+                Subject = claims,
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
-
+            // TODO de adaugat refresh token
             return tokenString;
         }
     }

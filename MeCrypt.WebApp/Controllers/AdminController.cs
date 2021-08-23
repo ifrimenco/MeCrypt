@@ -27,9 +27,7 @@ namespace MeCrypt.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<UserListItemModel> Get()
-        {
-            return UsersService.GetUsers();
-        }
+        public IEnumerable<UserListItemModel> Get() => UsersService.GetUsers();
+        
     }
 }

@@ -7,7 +7,7 @@ namespace MeCrypt.DataObjects.DTOs
     {
         public CurrentUserDto()
         {
-            Roles = new List<string>();
+            Permissions = new List<int>();
         }
 
         public Guid Id { get; set; }
@@ -16,7 +16,7 @@ namespace MeCrypt.DataObjects.DTOs
         public string LastName { get; set; }
         public bool IsAuthenticated { get; set; }
 
-        public List<string> Roles { get; set; }
+        public List<int> Permissions { get; set; }
 
     }
 }

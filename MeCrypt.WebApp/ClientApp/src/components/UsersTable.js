@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import { authHeader } from '../helpers';
 export class UsersTable extends Component {
     static displayName = UsersTable.name;
 
@@ -53,8 +53,8 @@ export class UsersTable extends Component {
     }
 
     async populateUserData() {
-        debugger;
-        const response = await fetch('admin');
+        const requestOptions = { method: 'GET', headers: authHeader() };
+        const response = await fetch('admin', requestOptions);
         const data = await response.json();
         this.setState({ users: data, loading: false });
     }

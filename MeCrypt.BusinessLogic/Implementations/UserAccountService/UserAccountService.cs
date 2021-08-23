@@ -16,12 +16,17 @@ namespace MeCrypt.BusinessLogic
         {
         }
 
-        public User Login(string email, string password)
+        public CurrentUserDto Login(string email, string password)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
                 return null;
 
-            var user = UnitOfWork.Users.Get().SingleOrDefault(user => user.Email == email);
+            var user = UnitOfWork.Users.Get()
+                .Include(u => u.UserRoles)
+                    .ThenInclude(ur => ur.Role)
+                        .ThenInclude(r => r.RolePermissions)
+                            .ThenInclude(rp => rp.Permission)
+                .SingleOrDefault(user => user.Email == email);
 
             // check if username exists
             if (user == null)
@@ -34,7 +39,21 @@ namespace MeCrypt.BusinessLogic
             }
 
             // authentication successful
-            return user;
+            return new CurrentUserDto
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                IsAuthenticated = true,
+                Email = user.Email,
+                Permissions = user.UserRoles
+                    .Select(ur => ur.Role)
+                    .Select(r => r.RolePermissions)
+                    .SelectMany(array => array
+                        .Select(rp => rp.PermissionId))
+                    .Distinct()
+                    .ToList(),
+            };
         }
 
         public User Register(RegisterDto model)

@@ -5,9 +5,9 @@ using System;
 
 namespace SocializR.BusinessLogic.Implementation.Account
 {
-    public class UserToDTOsssProfile : Profile
+    public class UserToDTOsProfile : Profile
     {
-        public UserToDTOsssProfile()
+        public UserToDTOsProfile()
         {
             CreateMap<User, UserListItemModel>();
         }
