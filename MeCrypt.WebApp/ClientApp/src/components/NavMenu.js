@@ -8,6 +8,7 @@ import { authenticationService } from '../services';
 export const NavMenu = (props) => {
 
     const [currentUserValue, setCurrentUserValue] = React.useState(authenticationService.currentUserValue);
+    const [hasUserEditingPermission, setHasUserEditingPermission] = React.useState(authenticationService.hasUserEditingPermission);
 
     const onLogout = () => {
         authenticationService.logout();
@@ -20,10 +21,15 @@ export const NavMenu = (props) => {
                 <Container>
                     <NavbarBrand tag={Link} to="/">MeCrypt</NavbarBrand>
                     <ul className="navbar-nav flex-grow">
-                        {currentUserValue ?
-                            <NavItem>
-                                <NavLink tag={Link} onClick={onLogout} className="text-dark" to="/">Logout</NavLink>
-                            </NavItem>
+                        {currentUserValue
+                            ? <>
+                                <NavItem>
+                                    <NavLink tag={Link} onClick={onLogout} className="text-dark" to="/">Logout</NavLink>
+                                </NavItem>
+                                <NavItem>
+                                    <NavLink tag={Link} className="text-dark" to="/adminPage">Admin</NavLink>
+                                </NavItem>
+                            </>
                             :
                             <>
                                 <NavItem>
@@ -33,12 +39,6 @@ export const NavMenu = (props) => {
                                     <NavLink tag={Link} className="text-dark" to="/registerPage">Register</NavLink>
                                 </NavItem>
                             </>}
-                        <NavItem>
-                            <NavLink tag={Link} className="text-dark" to="/counter">Counter</NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink tag={Link} className="text-dark" to="/fetch-data">Fetch data</NavLink>
-                        </NavItem>
                     </ul>
                 </Container>
             </Navbar>

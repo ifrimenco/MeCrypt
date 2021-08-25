@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
-import { authHeader } from '../helpers';
-export class UsersTable extends Component {
-    static displayName = UsersTable.name;
+import { Link } from 'react-router-dom';
+
+import { usersService } from '../services'
+
+export class UsersPage extends Component {
+    static displayName = UsersPage.name;
 
     constructor(props) {
         super(props);
         this.state = { users: [], loading: true };
     }
 
-    componentDidMount() { // se apeleaza prima oara cand apare componenta pe ecran 
-        this.populateUserData();
+    async componentDidMount() { // se apeleaza prima oara cand apare componenta pe ecran 
+        await this.populateUserData();
     }
 
     componentDidUpdate() { // se apeleaza de fiecare data cand se modifica props
@@ -24,6 +27,7 @@ export class UsersTable extends Component {
                         <th>Email</th>
                         <th>First Name</th>
                         <th>Last Name</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,6 +36,7 @@ export class UsersTable extends Component {
                             <td>{user.email}</td>
                             <td>{user.firstName}</td>
                             <td>{user.lastName}</td>
+                            <td><Link to={`/editUser/${user.id}`}><button className="editButton"></button></Link></td>
                         </tr>
                     )}
                 </tbody>
@@ -42,7 +47,7 @@ export class UsersTable extends Component {
     render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : UsersTable.renderUsersTable(this.state.users);
+            : UsersPage.renderUsersTable(this.state.users);
 
         return (
             <div>
@@ -53,9 +58,7 @@ export class UsersTable extends Component {
     }
 
     async populateUserData() {
-        const requestOptions = { method: 'GET', headers: authHeader() };
-        const response = await fetch('admin', requestOptions);
-        const data = await response.json();
+        const data = await usersService.getUsers();
         this.setState({ users: data, loading: false });
     }
 }

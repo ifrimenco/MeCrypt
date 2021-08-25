@@ -83,12 +83,13 @@ namespace MeCrypt
                 var userIdClaim = httpContext.User.FindFirst("Id")?.Value;
                 var isParsingSuccessful = Guid.TryParse(userIdClaim, out Guid id);
 
+                
                 return new CurrentUserDto
                 {
                     Id = id,
                     IsAuthenticated = httpContext.User.Identity.IsAuthenticated,
                     Email = httpContext.User.Identity.Name,
-                    Permissions = httpContext.User.FindAll("Permissions")?.Select(u => Int32.Parse(u.Value)).ToList()
+                    Permissions = httpContext.User.FindAll("Permission")?.Select(u => Int32.Parse(u.Value)).ToList()
                 };
             });
 
@@ -96,6 +97,7 @@ namespace MeCrypt
             services.AddScoped<ServiceDependencies>();
             services.AddScoped<UserAccountService>();
             services.AddScoped<UsersService>();
+            services.AddScoped<AdminService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

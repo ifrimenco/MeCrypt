@@ -1,6 +1,7 @@
 import { BehaviorSubject } from 'rxjs'; // observable design pattern
 
-import { handleLoginResponse } from '../helpers';
+
+import { handleLoginResponse, permissionTypes } from '../helpers';
 
 // TODO - Cookies in loc de localStorage -- localStorage e unsafe
 const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
@@ -10,6 +11,7 @@ export const authenticationService = {
     logout,
     register,
     currentUser: currentUserSubject.asObservable(),
+    get hasUserEditingPermission() { return [permissionTypes.Users_Update].indexOf(currentUserSubject.permissions) !== -1 },
     get currentUserValue() { return currentUserSubject.value }
 };
 

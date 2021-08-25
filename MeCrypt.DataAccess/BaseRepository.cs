@@ -1,5 +1,6 @@
 ﻿using MeCrypt.Common;
 using MeCrypt.DataAccess.EF;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MeCrypt.DataAccess
@@ -35,6 +36,11 @@ namespace MeCrypt.DataAccess
         public void Delete(TEntity entity)
         {
             Context.Set<TEntity>().Remove(entity);
+        }
+
+        public void DeleteRange(IEnumerable<TEntity> entities)
+        {
+            Context.Set<TEntity>().RemoveRange(entities);
         }
     }
 }

@@ -3,6 +3,7 @@ using MeCrypt.DataObjects.DTOs;
 using MeCrypt.DataObjects.Enums;
 using MeCrypt.WebApp.Code.Base;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -47,6 +48,7 @@ namespace MeCrypt.Controllers
             // return basic user info (without password) and token to store client side
             return Ok(new
             {
+                Id = user.Id,
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
@@ -73,9 +75,9 @@ namespace MeCrypt.Controllers
                 }
 
                 var userDto = Service.Login(model.Email, model.Password);
-
                 return Ok(new
                 {
+                    Id = user.Id,
                     Email = user.Email,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
@@ -84,15 +86,9 @@ namespace MeCrypt.Controllers
             }
             catch (Exception ex)
             {
-                // return error message if there was an exception
                 return BadRequest(ex.Message);
             }
         }
-        private async Task LogOut()
-        {
-            await HttpContext.SignOutAsync(scheme: "MeCryptCookies");
-        }
-
 
         private string LogIn(CurrentUserDto user)
         {

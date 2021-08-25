@@ -15,7 +15,6 @@ export const RegisterPage = (props) => {
 
     const onSubmit = () => {
         setIsSubmitting(true);
-        debugger;
 
         authenticationService.register(email, password, firstName, lastName)
             .then(

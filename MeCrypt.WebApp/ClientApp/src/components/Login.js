@@ -12,7 +12,6 @@ export const LoginPage = (props) => {
     const [password, setPassword] = React.useState(""); 
     const onSubmit = () => {
         setIsSubmitting(true);
-        debugger;
 
         authenticationService.login(email, password)
             .then(
