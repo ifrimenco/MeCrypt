@@ -52,6 +52,7 @@ namespace MeCrypt.Controllers
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                Permissions = user.Permissions,
                 Token = LogIn(user)
             });
         }
@@ -77,10 +78,11 @@ namespace MeCrypt.Controllers
                 var userDto = Service.Login(model.Email, model.Password);
                 return Ok(new
                 {
-                    Id = user.Id,
-                    Email = user.Email,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
+                    Id = userDto.Id,
+                    Email = userDto.Email,
+                    FirstName = userDto.FirstName,
+                    LastName = userDto.LastName,
+                    Permissions = userDto.Permissions,
                     Token = LogIn(userDto)
                 });
             }

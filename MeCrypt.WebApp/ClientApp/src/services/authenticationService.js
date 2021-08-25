@@ -11,7 +11,11 @@ export const authenticationService = {
     logout,
     register,
     currentUser: currentUserSubject.asObservable(),
-    get hasUserEditingPermission() { return [permissionTypes.Users_Update].indexOf(currentUserSubject.permissions) !== -1 },
+    get hasUserEditingPermission() {
+        if (currentUserSubject.value === null) return false;
+
+        return (currentUserSubject.value.permissions.find(number => number === permissionTypes.Users_Update));
+    },
     get currentUserValue() { return currentUserSubject.value }
 };
 

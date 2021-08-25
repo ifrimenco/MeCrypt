@@ -78,6 +78,15 @@ namespace MeCrypt.BusinessLogic
                 });
             }
 
+            if (source.IsSecretViewer)
+            {
+                userRoles.Add(new UserRole
+                {
+                    UserId = source.Id,
+                    RoleId = (int)RoleTypes.Secret_Viewer
+                });
+            }
+
             return userRoles;
         }
     }

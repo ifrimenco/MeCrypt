@@ -10,6 +10,7 @@ namespace MeCrypt.DataObjects.Enums
     {
         User = 1,
         Admin = 2,
-        Dealer = 3
+        Dealer = 3,
+        Secret_Viewer = 4
     }
 }

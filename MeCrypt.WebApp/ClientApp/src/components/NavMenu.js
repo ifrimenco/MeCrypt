@@ -24,10 +24,15 @@ export const NavMenu = (props) => {
                         {currentUserValue
                             ? <>
                                 <NavItem>
-                                    <NavLink tag={Link} onClick={onLogout} className="text-dark" to="/">Logout</NavLink>
+                                    <p><em>Welcome, {`${currentUserValue.firstName} ${currentUserValue.lastName}`}</em></p>
                                 </NavItem>
+                                {hasUserEditingPermission
+                                    ? <NavItem>
+                                        <NavLink tag={Link} className="text-dark" to="/adminPage">Admin</NavLink>
+                                    </NavItem>
+                                    : <></>}
                                 <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/adminPage">Admin</NavLink>
+                                    <NavLink tag={Link} onClick={onLogout} className="text-dark" to="/">Logout</NavLink>
                                 </NavItem>
                             </>
                             :

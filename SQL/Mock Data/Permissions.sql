@@ -27,14 +27,14 @@ USING (VALUES
 	(2, 10),
 	(2, 11),
 	(2, 20),
-	(2, 21),
 	(3, 0),
 	(3, 1),
 	(3, 10),
 	(3, 11),
 	(3, 20),
-	(3, 21)
-
+	(4, 0),
+	(4, 1),
+	(4, 21)
 ) AS [Source] ([RoleId], [PermissionId])
 ON ([Target].[RoleId] = [Source].[RoleId] AND [Target].[PermissionId] = [Source].[PermissionId])
 WHEN NOT MATCHED THEN

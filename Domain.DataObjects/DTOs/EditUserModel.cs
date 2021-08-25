@@ -12,6 +12,7 @@ namespace MeCrypt.DataObjects.DTOs
 
         public bool IsAdmin { get; set; }
         public bool IsDealer { get; set; }
+        public bool IsSecretViewer { get; set; }
     }
 }
 

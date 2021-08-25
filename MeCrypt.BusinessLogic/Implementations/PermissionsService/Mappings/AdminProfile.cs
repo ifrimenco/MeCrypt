@@ -21,7 +21,11 @@ namespace SocializR.BusinessLogic.Implementation.Account
                 .ForMember(u => u.IsDealer, m => m.MapFrom(s => s.UserRoles
                     .Select(ur => ur.RoleId)
                     .ToList()
-                    .Contains((int)RoleTypes.Dealer)));
+                    .Contains((int)RoleTypes.Dealer)))
+                .ForMember(u => u.IsSecretViewer, m => m.MapFrom(s => s.UserRoles
+                    .Select(ur => ur.RoleId)
+                    .ToList()
+                    .Contains((int)RoleTypes.Secret_Viewer)));
         }
     }
 }
