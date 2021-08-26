@@ -5,11 +5,11 @@ using System;
 
 namespace SocializR.BusinessLogic.Implementation.Account
 {
-    public class UserToDTOssProfile : Profile
+    public class SecretsProfile : Profile
     {
-        public UserToDTOssProfile()
+        public SecretsProfile()
         {
-            CreateMap<User, UserListItemModel>();
+            CreateMap<Secret, SecretListItemModel>();
         }
     }
 }

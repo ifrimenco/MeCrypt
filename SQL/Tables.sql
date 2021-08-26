@@ -40,6 +40,14 @@ CREATE TABLE [Role_Permissions] (
 	CONSTRAINT FK_RolePermissions_Permissions FOREIGN KEY (PermissionId) REFERENCES [Permissions](Id)
 );
 
+CREATE TABLE [Secrets] (
+	Id UNIQUEIDENTIFIER NOT NULL,	
+	OpenerId UNIQUEIDENTIFIER NOT NULL,
+	Content VARBINARY(MAX) NOT NULL,
+
+	CONSTRAINT FK_Secrets_Openers FOREIGN KEY (OpenerId) REFERENCES [Users](Id),
+)
+
 /* pana aici e rulat */
 CREATE TABLE [Rooms] (
 	Id UNIQUEIDENTIFIER NOT NULL,
@@ -73,5 +81,3 @@ CREATE TABLE [Messages] (
 -- 	DealerId UNIQUEIDENTIFIER NOT NULL /* posibil sa fie optional */
 -- );
 
-
-CREATE TABLE [UserRooms] ()()

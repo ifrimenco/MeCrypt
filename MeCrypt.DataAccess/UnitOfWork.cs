@@ -39,6 +39,9 @@ namespace MeCrypt.DataAccess
         private IRepository<UserRoom> userRooms;
         public IRepository<UserRoom> UserRooms => userRooms ?? (userRooms = new BaseRepository<UserRoom>(Context));
 
+        private IRepository<Secret> secrets;
+        public IRepository<Secret> Secrets => secrets ?? (secrets = new BaseRepository<Secret>(Context));
+
         public void SaveChanges()
         {
             Context.SaveChanges();

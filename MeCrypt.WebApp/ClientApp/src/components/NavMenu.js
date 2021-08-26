@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
+import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
 
 import { authenticationService } from '../services';
 
+
 export const NavMenu = (props) => {
 
+    const history = useHistory();
     const [currentUserValue, setCurrentUserValue] = React.useState(authenticationService.currentUserValue);
     const [hasUserEditingPermission, setHasUserEditingPermission] = React.useState(authenticationService.hasUserEditingPermission);
 
     const onLogout = () => {
         authenticationService.logout();
-        window.location.reload();
+        history.push('/');
+        setCurrentUserValue(null);
     }
 
     return (

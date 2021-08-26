@@ -3,10 +3,9 @@ using System.Collections.Generic;
 
 namespace MeCrypt.DataObjects.DTOs
 {
-    public class RoleListItemModel
+    public class SecretListItemModel
     {
-        public int Id { get; set; }
-        public string Title { get; set; }
+        public Guid Id { get; set; }
     }
 }
 

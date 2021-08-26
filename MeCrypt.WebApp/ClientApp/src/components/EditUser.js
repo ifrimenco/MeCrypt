@@ -1,7 +1,6 @@
 import React from 'react';
-import { useParams } from 'react-router'
-import { adminService } from '../services'
-import { useHistory } from 'react-router';
+import { useParams, useHistory } from 'react-router';
+import { adminService } from '../services';
 
 export const EditUser = (props) => {
 

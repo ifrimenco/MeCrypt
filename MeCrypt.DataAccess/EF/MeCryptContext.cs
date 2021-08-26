@@ -26,14 +26,14 @@ namespace MeCrypt.DataAccess.EF
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<UserRoom> UserRooms { get; set; }
+        public virtual DbSet<Secret> Secrets { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
                 // de scos din configuratie
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=MeCrypt;Trusted_Connection=True;");
+              optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=MeCrypt;Trusted_Connection=True;");
             }
         }
 
@@ -154,6 +154,19 @@ namespace MeCrypt.DataAccess.EF
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_UserRooms_Users");
+            });
+
+            modelBuilder.Entity<Secret>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Content)
+                    .IsRequired();
+
+                entity.HasOne(d => d.Opener)
+                .WithMany(p => p.Secrets)
+                .HasForeignKey(d => d.OpenerId)
+                .HasConstraintName("FK_Secrets_Openers");
             });
 
             OnModelCreatingPartial(modelBuilder);
