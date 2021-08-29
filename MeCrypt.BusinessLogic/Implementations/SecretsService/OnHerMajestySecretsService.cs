@@ -26,16 +26,16 @@ namespace MeCrypt.BusinessLogic
                     Mapper.Map<Secret, SecretListItemModel>(secret));
         }
 
-        public string DecryptSecret(Guid secretId, List<BigInteger> shares)
+        public string DecryptSecret(GetSecretModel model)
         {
-            var content = UnitOfWork.Secrets.Get().Where(secret => secret.Id == secretId).SingleOrDefault()?.Content;
+            var content = UnitOfWork.Secrets.Get().Where(secret => secret.Id == model.secretId).SingleOrDefault()?.Content;
 
             if (content == null)
             {
                 return null;
             }
 
-            var key = SecretsHelper.GenerateSecret(shares).ToByteArray();
+            var key = SecretsHelper.GenerateSecret(model.Shares).ToByteArray();
 
             var decryptedContent = EncryptionHelper.DecryptText(key, content);
 
@@ -48,18 +48,19 @@ namespace MeCrypt.BusinessLogic
         }
 
         // TODO de facut toate metodele care sunt apelate de metode POST cu ExecuteInTransaction
-        public void CreateSecret(string content, List<Tuple<Guid, int>> userSecrets, int minimumShares)
+        public void CreateSecret(CreateSecretModel model)
         {
             RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
 
             var key = new byte[32];
             provider.GetBytes(key);
 
-            var encryptedContent = EncryptionHelper.EncryptText(key, content);
+            var encryptedContent = EncryptionHelper.EncryptText(key, model.Content);
 
             var secret = new Secret()
             {
                 Content = encryptedContent,
+                Title = model.Title,
                 Id = Guid.NewGuid(),
                 OpenerId = CurrentUser.Id,
             };
@@ -71,11 +72,11 @@ namespace MeCrypt.BusinessLogic
 
             var keyAsInteger = new BigInteger(key);
 
-            var nrShares = userSecrets.Sum(us => us.Item2);
-            var shares = SecretsHelper.GenerateShares(keyAsInteger, nrShares, minimumShares).ToArray();
+            var nrShares = model.UserSecrets.Sum(us => us.Item2);
+            var shares = SecretsHelper.GenerateShares(keyAsInteger, nrShares, model.MinimumShares).ToArray(); // de adaugat minimumShares pe front
 
             int currentShareIndex = 0;
-            foreach (var userSecret in userSecrets)
+            foreach (var userSecret in model.UserSecrets)
             {
                 var email = users.Where(u => u.Id == userSecret.Item1).Select(u => u.Email).SingleOrDefault();
 
@@ -87,7 +88,7 @@ namespace MeCrypt.BusinessLogic
                 var userShares = new List<BigInteger>();
                 for (int i = 0; i < userSecret.Item2; i++)
                 {
-                    userShares.Add(shares[++currentShareIndex]);
+                    userShares.Add(shares[currentShareIndex++]);
                 }
 
                 mailHelper.SendSecretsMail(email, userShares, secret.Id);

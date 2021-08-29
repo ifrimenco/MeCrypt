@@ -19,7 +19,7 @@ namespace MeCrypt.Common
             client.UseDefaultCredentials = false;
 
             System.Net.NetworkCredential credential =
-                new System.Net.NetworkCredential("mecrypt@outlook.com", "mecrypt@1234");
+                new System.Net.NetworkCredential("mecrypt@outlook.com", "parola@1234");
 
             client.EnableSsl = true;
             client.Credentials = credential;
@@ -37,7 +37,8 @@ namespace MeCrypt.Common
             
             for (int i = 0; i < secretsArray.Length; i++)
             {
-                var secretText = $"<p>{i + 1}: {secretsArray[i]}</p>";
+                var secretText = $"<p>{i + 1}: {secretsArray[i].ToString()}</p>";
+                message.Body += secretText;
             }
 
             message.IsBodyHtml = true;

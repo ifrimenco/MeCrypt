@@ -33,7 +33,7 @@ namespace MeCrypt.DataAccess.EF
             if (!optionsBuilder.IsConfigured)
             {
                 // de scos din configuratie
-              optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=MeCrypt;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=MeCrypt;Trusted_Connection=True;");
             }
         }
 
@@ -159,6 +159,10 @@ namespace MeCrypt.DataAccess.EF
             modelBuilder.Entity<Secret>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Title)
+                    .IsRequired()
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.Content)
                     .IsRequired();

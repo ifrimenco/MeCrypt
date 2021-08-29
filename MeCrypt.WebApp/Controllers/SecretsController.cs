@@ -36,9 +36,41 @@ namespace MeCrypt.Controllers
             return Ok(OnHerMajestySecretsService.GetSecrets());
         }
 
-        [HttpPost, Route("createSecret") 
-        public IActionResult CreateSecret([FromBody Cr]) { }
+        [HttpPost, Route("createSecret")]
+        public IActionResult CreateSecret([FromBody] CreateSecretModel model)
         {
+            if (!HasPermission(PermissionTypes.Secrets_Deal))
+            {
+                return Unauthorized();
+            }
+            try
+            {
+                OnHerMajestySecretsService.CreateSecret(model);
+                return Ok();
+            }
+
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet, Route("getSecret/{secretId}")]
+        public IActionResult GetSecret([FromBody] GetSecretModel model) 
+        {
+            if (!HasPermission(PermissionTypes.Secrets_View))
+            {
+                return Unauthorized();
+            }
+
+            var secret = OnHerMajestySecretsService.DecryptSecret(model);
+
+            if (secret == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(secret);
         }
     }
 }

@@ -8,6 +8,9 @@ import { UsersPage } from './components/UsersPage';
 import { EditUser } from './components/EditUser';
 import { LoginPage } from './components/Login';
 import { RegisterPage } from './components/Register';
+import { CreateSecret } from './components/secrets/CreateSecret';
+import { SecretPage} from './components/secrets/SecretPage';
+import { SecretsPage } from './components/secrets/SecretsPage';
 import * as Errors from './components/DefaultPages';
 
 import './static/styling/styling.css'
@@ -30,6 +33,9 @@ export default class App extends Component {
                     <Route path='/unauthorized' component={Errors.Unauthorized} />
                     <Route path='/forbidden' component={Errors.Forbidden} />
                     <Route path='/badRequest' component={Errors.BadRequest} />
+                    <Route path='/secretsPage' component={SecretsPage} />
+                    <Route path='/createSecret' component={CreateSecret} />
+                    <Route path='/ComputeSecret/:secretId' component={SecretPage} />
                     <Route path="*" component={Errors.NotFound} />
                 </Switch>
             </Layout>

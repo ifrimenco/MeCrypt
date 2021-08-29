@@ -38,21 +38,13 @@ namespace MeCrypt.Controllers
 
         public IActionResult GetUsers()
         {
-            byte[] key = new byte[32];
-            RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
-            provider.GetBytes(key);
-
-            var secret = new BigInteger(key);
-
-            var shares = SecretsHelper.GenerateShares(secret, 5, 3);
-            var result = SecretsHelper.GenerateSecret(shares);
-
-            var rrkey = result.ToByteArray();
             if (!HasPermission(PermissionTypes.Users_View))
             {
                 return Unauthorized();
             }
-            return Ok(UsersService.GetUsers());
+
+            var users = UsersService.GetUsers();
+            return Ok(users) ;
         }
 
     }
