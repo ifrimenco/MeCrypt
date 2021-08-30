@@ -40,7 +40,7 @@ namespace MeCrypt.Controllers
                 return BadRequest("User Already logged in");
             }
 
-            var user = Service.Login(model.Email, model.Password);
+            var user = Service.Login(model.Email, model.Password, model.PublicKey);
 
             if (user == null)
                 return BadRequest("Email or password is incorrect");
@@ -75,7 +75,7 @@ namespace MeCrypt.Controllers
                     return BadRequest("E-mail Already Used!");
                 }
 
-                var userDto = Service.Login(model.Email, model.Password);
+                var userDto = Service.Login(model.Email, model.Password, model.PublicKey);
                 return Ok(new
                 {
                     Id = userDto.Id,

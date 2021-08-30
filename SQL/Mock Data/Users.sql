@@ -8,7 +8,6 @@ WHEN NOT MATCHED THEN
  VALUES([Source].[Id], [Source].[Email], [Source].[FirstName], [Source].[LastName], [Source].[PasswordHash]);
 GO
 
-
 MERGE INTO [User_Roles] AS [Target]
 USING (VALUES 
 	('90997D56-A5FC-4BD2-93C3-4F45AF3C63CE', 2)

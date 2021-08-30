@@ -44,8 +44,7 @@ namespace MeCrypt.Controllers
             }
 
             var users = UsersService.GetUsers();
-            return Ok(users) ;
+            return Ok(users);
         }
-
     }
 }

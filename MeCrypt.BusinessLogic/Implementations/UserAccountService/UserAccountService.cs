@@ -16,7 +16,7 @@ namespace MeCrypt.BusinessLogic
         {
         }
 
-        public CurrentUserDto Login(string email, string password)
+        public CurrentUserDto Login(string email, string password, string publicKey)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
                 return null;
@@ -39,6 +39,9 @@ namespace MeCrypt.BusinessLogic
             }
 
             // authentication successful
+            user.PublicKey = publicKey;
+            UnitOfWork.Users.Update(user);
+            UnitOfWork.SaveChanges();
             return new CurrentUserDto
             {
                 Id = user.Id,

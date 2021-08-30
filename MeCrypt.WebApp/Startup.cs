@@ -2,6 +2,7 @@ using MeCrypt.BusinessLogic;
 using MeCrypt.DataAccess;
 using MeCrypt.DataAccess.EF;
 using MeCrypt.DataObjects.DTOs;
+using MeCrypt.WebApp.Code;
 using MeCrypt.WebApp.Code.Base;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -64,6 +65,7 @@ namespace MeCrypt
                 };
             });
 
+            services.AddSignalR();
             services.AddDbContext<MeCryptContext>(options =>
             {
                 options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]);
@@ -93,6 +95,17 @@ namespace MeCrypt
                 };
             });
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("ClientPermission", policy =>
+                {
+                    policy.AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .WithOrigins("https://localhost:44358")
+                        .AllowCredentials();
+                });
+            });
+
             services.AddScoped<ControllerDependencies>();
             services.AddScoped<ServiceDependencies>();
             services.AddScoped<UserAccountService>();
@@ -119,6 +132,7 @@ namespace MeCrypt
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
+            app.UseCors("ClientPermission");
             app.UseRouting();
 
             app.UseAuthentication();
@@ -129,6 +143,8 @@ namespace MeCrypt
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapHub<ChatHub>("/hubs/chat");
             });
 
             app.UseSpa(spa =>

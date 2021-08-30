@@ -11,10 +11,10 @@ import { RegisterPage } from './components/Register';
 import { CreateSecret } from './components/secrets/CreateSecret';
 import { SecretPage} from './components/secrets/SecretPage';
 import { SecretsPage } from './components/secrets/SecretsPage';
+import { Test } from './components/chat/Test';
 import * as Errors from './components/DefaultPages';
 
 import './static/styling/styling.css'
-import { Unauthorized } from './components/DefaultPages';
 
 export default class App extends Component {
     static displayName = App.name;
@@ -35,6 +35,7 @@ export default class App extends Component {
                     <Route path='/badRequest' component={Errors.BadRequest} />
                     <Route path='/secretsPage' component={SecretsPage} />
                     <Route path='/createSecret' component={CreateSecret} />
+                    <Route path='/test' component={Test} />
                     <Route path='/ComputeSecret/:secretId' component={SecretPage} />
                     <Route path="*" component={Errors.NotFound} />
                 </Switch>

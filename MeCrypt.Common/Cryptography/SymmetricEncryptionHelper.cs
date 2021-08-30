@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MeCrypt.Common
 {
-    public static class EncryptionHelper
+    public static class SymmetricEncryptionHelper
     {
         private const int IV_SIZE = 16; // size in bytes
         // the key must be 128, 192 or 256 bits long

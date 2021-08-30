@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace MeCrypt.Common
 {
+    // TODO - de modificat din BigInteger in Base64 
     public static class SecretsHelper
     {
         // curently works up to max 255 shares

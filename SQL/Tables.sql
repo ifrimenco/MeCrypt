@@ -1,11 +1,13 @@
+DELETE FROM USERS;
 CREATE TABLE [Users] (
 	Id UNIQUEIDENTIFIER NOT NULL,
 	Email NVARCHAR(100) NOT NULL,
 	PasswordHash NVARCHAR(150) NOT NULL,
 	FirstName NVARCHAR(40) NOT NULL,
-	LastName NVARCHAR(40) NOT NULL
+	LastName NVARCHAR(40) NOT NULL,
+	PublicKey VARBINARY(300) NOT NULL,
 
-	CONSTRAINT PK_Users PRIMARY KEY (Id),
+	CONSTRAINT PK_Users PRIMARY KEY (Id)
 );
 
 CREATE TABLE [Roles] (
@@ -49,7 +51,6 @@ CREATE TABLE [Secrets] (
 	CONSTRAINT FK_Secrets_Openers FOREIGN KEY (OpenerId) REFERENCES [Users](Id),
 )
 
-/* pana aici e rulat */
 CREATE TABLE [Rooms] (
 	Id UNIQUEIDENTIFIER NOT NULL,
 	CreatorId UNIQUEIDENTIFIER NOT NULL,
@@ -69,11 +70,17 @@ CREATE TABLE [User_Rooms] (
 	CONSTRAINT FK_UserRooms_Rooms FOREIGN KEY (RoomId) REFERENCES [Rooms](Id),
 );
 
+
 CREATE TABLE [Messages] (
-	Id UNIQUEIDENTIFIER NOT NULL,	
+	SenderId UNIQUEIDENTIFIER NOT NULL,
+	ReceiverId UNIQUEIDENTIFIER NOT NULL,
+	RoomId UNIQUEIDENTIFIER NOT NULL,
 	CryptedContent NVARCHAR(MAX) NOT NULL,
 	DateTimeSent DATETIMEOFFSET NOT NULL, -- sa argumentez de ce am folosit DateTimeOffSet
 	Lifespan INT NOT NULL,
-	-- posibil de mai adaugat coloane
+
+	CONSTRAINT PK_Messages PRIMARY KEY (SenderId, ReceiverId, RoomId),
+	CONSTRAINT FK_Message_Sender FOREIGN KEY(SenderId, RoomId) REFERENCES [User_Rooms](UserId, RoomId),
+	CONSTRAINT FK_Message_Receiver FOREIGN KEY(ReceiverId, RoomId) REFERENCES [User_Rooms](UserId, RoomId)
 );
 

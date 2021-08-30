@@ -37,7 +37,7 @@ namespace MeCrypt.BusinessLogic
 
             var key = SecretsHelper.GenerateSecret(model.Shares).ToByteArray();
 
-            var decryptedContent = EncryptionHelper.DecryptText(key, content);
+            var decryptedContent = SymmetricEncryptionHelper.DecryptText(key, content);
 
             if (decryptedContent == null)
             {
@@ -55,7 +55,7 @@ namespace MeCrypt.BusinessLogic
             var key = new byte[32];
             provider.GetBytes(key);
 
-            var encryptedContent = EncryptionHelper.EncryptText(key, model.Content);
+            var encryptedContent = SymmetricEncryptionHelper.EncryptText(key, model.Content);
 
             var secret = new Secret()
             {

@@ -3,7 +3,8 @@ import { BehaviorSubject } from 'rxjs'; // observable design pattern
 
 import { handleLoginResponse, permissionTypes } from '../helpers';
 
-// TODO - Cookies in loc de localStorage -- localStorage e unsafe
+const keypair = require("keypair");
+
 const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
 
 export const authenticationService = {
@@ -20,10 +21,14 @@ export const authenticationService = {
 };
 
 function login(email, password) {
+    var key = getNewKey();
+    var publicKey = key.publicKey;
+    var privateKey = key.privateKey;
+    debugger;
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password, publicKey })
     };
 
     return fetch(`https://localhost:44358/UserAccount/Login`, requestOptions)
@@ -31,24 +36,36 @@ function login(email, password) {
         .then(user => {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             localStorage.setItem('currentUser', JSON.stringify(user));
+            localStorage.setItem('privateKey', privateKey);
             currentUserSubject.next(user);
 
             return user;
         });
 }
-
+function getNewKey() { // creates a 2048-bits modulus RSA key
+    var pair = keypair();
+    return {
+        privateKey: pair.private,
+        publicKey: pair.public
+    }
+}
 function register(email, password, firstName, lastName) {
+    var key = getNewKey();
+    var publicKey = key.publicKey;
+    var privateKey = key.privateKey;
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, firstName, lastName })
+        body: JSON.stringify({ email, password, firstName, lastName, publicKey })
     };
 
     return fetch(`https://localhost:44358/UserAccount/Register`, requestOptions)
-        .then(handleLoginResponse) // TODO de redenumit handle login response
+        .then(handleLoginResponse) 
         .then(user => {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
+
             localStorage.setItem('currentUser', JSON.stringify(user));
+            localStorage.setItem('privateKey', privateKey);
             currentUserSubject.next(user);
 
             return user;

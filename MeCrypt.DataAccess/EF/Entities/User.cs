@@ -20,9 +20,9 @@ namespace MeCrypt.DataAccess.EF.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string PasswordHash { get; set; }
+        public string PublicKey { get; set; }
 
         public virtual ICollection<Room> CreatedRooms { get; set; }
-        public virtual ICollection<Secret> Secrets { get; set; }
         public virtual ICollection<UserRole> UserRoles { get; set; }
         public virtual ICollection<UserRoom> UserRooms { get; set; }
     }
