@@ -14,6 +14,6 @@ namespace MeCrypt.DataObjects.Enums
         Room_Create = 10,
         Messages_ReadWrite = 11,
         Secrets_Deal = 20,
-        Secrets_View = 21,
+        Secrets_Open = 21,
     }
 }

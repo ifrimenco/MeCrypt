@@ -26,73 +26,98 @@ namespace MeCrypt.BusinessLogic
                     Mapper.Map<Secret, SecretListItemModel>(secret));
         }
 
-        public string DecryptSecret(GetSecretModel model)
+        public SecretDetailsModel GetSecret(Guid secretId)
         {
-            var content = UnitOfWork.Secrets.Get().Where(secret => secret.Id == model.secretId).SingleOrDefault()?.Content;
+            return UnitOfWork.Secrets.Get()
+                .Where(s => s.Id == secretId)
+                .Select(secret => Mapper.Map<Secret, SecretDetailsModel>(secret))
+                .SingleOrDefault();
+        }
+
+        public string OpenSecret(OpenSecretModel model)
+        {
+            foreach (var share in model.Shares)
+            {
+                if (share == "" || share == null)
+                {
+                    return null;
+                } 
+            }
+
+            var content = UnitOfWork.Secrets.Get().Where(secret => secret.Id == model.SecretId).SingleOrDefault()?.Content;
 
             if (content == null)
             {
                 return null;
             }
 
-            var key = SecretsHelper.GenerateSecret(model.Shares).ToByteArray();
+            List<BigInteger> shares = model.Shares.Select(s => BigInteger.Parse(s)).ToList();
 
-            var decryptedContent = SymmetricEncryptionHelper.DecryptText(key, content);
+            var key = SecretsHelper.GenerateSecret(shares).ToByteArray();
+            try
+            {
+                var decryptedContent = SymmetricEncryptionHelper.DecryptText(key, content);
 
-            if (decryptedContent == null)
+                // dupa aceea secretul este sters. Totusi, din frica unei alte blocari a contului mail de catre Microsoft,
+                // las implementarea acestei bucati pana dupa licenta pentru a putea demonstra functionalitatea componentei de partajare a secretelor
+                return decryptedContent;
+            }
+            catch
             {
                 return null;
             }
 
-            return decryptedContent;
         }
 
-        // TODO de facut toate metodele care sunt apelate de metode POST cu ExecuteInTransaction
+        
         public void CreateSecret(CreateSecretModel model)
         {
-            RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
-
-            var key = new byte[32];
-            provider.GetBytes(key);
-
-            var encryptedContent = SymmetricEncryptionHelper.EncryptText(key, model.Content);
-
-            var secret = new Secret()
+            ExecuteInTransaction(unitOfWork =>
             {
-                Content = encryptedContent,
-                Title = model.Title,
-                Id = Guid.NewGuid(),
-                OpenerId = CurrentUser.Id,
-            };
+                RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
 
-            UnitOfWork.Secrets.Insert(secret);
-            UnitOfWork.SaveChanges();
+                var key = new byte[32];
+                provider.GetBytes(key);
 
-            var users = UnitOfWork.Users.Get().ToList();
+                var encryptedContent = SymmetricEncryptionHelper.EncryptText(key, model.Content);
 
-            var keyAsInteger = new BigInteger(key);
-
-            var nrShares = model.UserSecrets.Sum(us => us.Item2);
-            var shares = SecretsHelper.GenerateShares(keyAsInteger, nrShares, model.MinimumShares).ToArray(); // de adaugat minimumShares pe front
-
-            int currentShareIndex = 0;
-            foreach (var userSecret in model.UserSecrets)
-            {
-                var email = users.Where(u => u.Id == userSecret.Item1).Select(u => u.Email).SingleOrDefault();
-
-                if (email == null)
+                var secret = new Secret()
                 {
-                    return;
-                }
+                    Content = encryptedContent,
+                    Title = model.Title,
+                    Id = Guid.NewGuid(),
+                    OpenerId = CurrentUser.Id,
+                };
 
-                var userShares = new List<BigInteger>();
-                for (int i = 0; i < userSecret.Item2; i++)
+                unitOfWork.Secrets.Insert(secret);
+                unitOfWork.SaveChanges();
+
+                var users = UnitOfWork.Users.Get().ToList();
+
+                var keyAsInteger = new BigInteger(key);
+
+                var nrShares = model.UserSecrets.Sum(us => us.Item2);
+                var shares = SecretsHelper.GenerateShares(keyAsInteger, nrShares, model.MinimumShares).ToArray(); // de adaugat minimumShares pe front
+
+                int currentShareIndex = 0;
+                foreach (var userSecret in model.UserSecrets)
                 {
-                    userShares.Add(shares[currentShareIndex++]);
-                }
+                    var email = users.Where(u => u.Id == userSecret.Item1).Select(u => u.Email).SingleOrDefault();
 
-                mailHelper.SendSecretsMail(email, userShares, secret.Id);
-            }
+                    if (email == null)
+                    {
+                        return;
+                    }
+
+                    var userShares = new List<BigInteger>();
+                    for (int i = 0; i < userSecret.Item2; i++)
+                    {
+                        userShares.Add(shares[currentShareIndex++]);
+                    }
+
+                    mailHelper.SendSecretsMail(email, userShares, secret.Title);
+                }
+            });
 
         }
     }

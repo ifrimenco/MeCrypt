@@ -83,4 +83,3 @@ CREATE TABLE [Messages] (
 	CONSTRAINT FK_Message_Sender FOREIGN KEY(SenderId, RoomId) REFERENCES [User_Rooms](UserId, RoomId),
 	CONSTRAINT FK_Message_Receiver FOREIGN KEY(ReceiverId, RoomId) REFERENCES [User_Rooms](UserId, RoomId)
 );
-

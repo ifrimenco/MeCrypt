@@ -15,6 +15,10 @@ export class UsersPage extends Component {
         await this.populateUserData();
     }
 
+    componentDidUpdate() { // se apeleaza de fiecare data cand se modifica props
+
+    }
+
     static renderUsersTable(users) {
         return (
             <table className='table table-striped' aria-labelledby="tabelLabel">

@@ -2,8 +2,7 @@ import { authHeader, handleResponse } from '../helpers';
 
 export const usersService = {
     getUsers,
-    getSingleUser,
-    editUser
+    getSingleUser
 };
 
 async function getUsers() {
@@ -22,8 +21,4 @@ async function getSingleUser(userId) {
         .then(handleResponse);
 
     return response;
-}
-
-async function editUser(userId) {
-    const requestOptions = { method: 'POST', headers: authHeader() };
 }

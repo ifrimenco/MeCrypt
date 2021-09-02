@@ -40,8 +40,9 @@ const UserSecretComponent = (props) => {
 }
 
 export const CreateSecret = (props) => {
-    const [isSubmitting, setIsSubmitting] = React.useState(false); // creeaza un state
+    const [isSubmitting, setIsSubmitting] = React.useState(false); 
     const [userShares, setUserShares] = React.useState([{ item1: "", item2: "", index: 0 }]);
+    const [minimumShares, setMinimumShares] = React.useState(0);
     const [title, setTitle] = React.useState("");
     const [content, setContent] = React.useState("");
     const [index, setIndex] = React.useState(1);
@@ -56,10 +57,10 @@ export const CreateSecret = (props) => {
         setIndex(index + 1);
     };
 
-    const submitSecret = async (content, title, userSecrets) => {
+    const submitSecret = async (content, title, minimumShares, userSecrets) => {
         setIsSubmitting(true);
 
-        await secretsService.createSecret(content, title, userSecrets).then(response => {
+        await secretsService.createSecret(content, title, minimumShares, userSecrets).then(response => {
             history.push('/');
         })
     }
@@ -72,9 +73,12 @@ export const CreateSecret = (props) => {
             </div>
             <div className="form-group">
                 <label htmlFor="content">Content</label>
-                <textarea rows="5" cols="100" value={content} onChange={(event) => { setContent(event.target.value) }} name="password" type="password" className={'form-control'} />
+                <textarea rows="5" cols="100" value={content} onChange={(event) => { setContent(event.target.value) }} name="content"  className={'form-control'} />
             </div>
-
+            <div className="form-group">
+                <label htmlFor="content">Minimum Number of Shares </label>
+                <input type="number" value={minimumShares} onChange={(event) => { setMinimumShares(event.target.value) }} name="password" className={'form-control'} />
+            </div>
             {userShares.map((userShare, index) =>
                 <UserSecretComponent id={index}
                     index={index}
@@ -83,7 +87,7 @@ export const CreateSecret = (props) => {
 
             <button type="button" class="btn btn-secondary" onClick={() => { addUser(); }}>Add User</button>
             <div className="form-group">
-                <button type="button" onClick={() => { submitSecret(content, title, userShares) }} className="btn btn-primary" disabled={isSubmitting}>Store Secret</button>
+                <button type="button" onClick={() => { submitSecret(content, title, minimumShares, userShares) }} className="btn btn-primary" disabled={isSubmitting}>Store Secret</button>
                 {isSubmitting &&
                     <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
                 }

@@ -20,3 +20,19 @@ code {
     width: 32px;
     height: 32px;
 }
+
+.viewButton {
+    background: url(../resources/eyeButton.png) no-repeat;
+    cursor: pointer;
+    border: none;
+    width: 32px;
+    height: 32px;
+}
+
+.deleteButton {
+    background: url(../resources/deleteButton.png) no-repeat;
+    cursor: pointer;
+    border: none;
+    width: 32px;
+    height: 32px;
+}

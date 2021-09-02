@@ -2,8 +2,6 @@
 using MeCrypt.DataObjects.DTOs;
 using MeCrypt.DataObjects.Enums;
 using MeCrypt.WebApp.Code.Base;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;

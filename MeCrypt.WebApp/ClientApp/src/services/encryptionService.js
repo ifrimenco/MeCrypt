@@ -1,4 +1,6 @@
 
+const crypto = require("crypto");
+
 export const encrpytionService = {
     encryptMessage,
     decryptMessage

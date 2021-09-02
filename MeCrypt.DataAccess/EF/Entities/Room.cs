@@ -16,6 +16,7 @@ namespace MeCrypt.DataAccess.EF.Entities
         public Guid Id { get; set; }
         public Guid CreatorId { get; set; }
         public int MessageLifespan { get; set; }
+        public string Name { get; set; }
 
         public virtual User Creator { get; set; }
         public virtual ICollection<UserRoom> UserRooms { get; set; }

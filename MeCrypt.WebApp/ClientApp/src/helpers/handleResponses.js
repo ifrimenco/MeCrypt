@@ -18,9 +18,22 @@ export function handleLoginResponse(response) {
     });
 }
 
+function isJson(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+
+    return true;
+}
+
 export function handleResponse(response) {
     return response.text().then(text => {
-        const data = text && JSON.parse(text);
+        
+        const data = isJson(text)
+            ? JSON.parse(text)
+            : text;
 
         if (!response.ok) {
             if ([400].indexOf(response.status) !== -1) {

@@ -9,7 +9,6 @@ namespace MeCrypt.Common
 {
     public static class HashHelper
     {
-
         private const int SALT_SIZE = 24; // size in bytes
         private const int HASH_SIZE = 24; // size in bytes
         private const int ITERATIONS = 100000; // number of pbkdf2 iterations
@@ -51,3 +50,4 @@ namespace MeCrypt.Common
         }
     }
 }
+

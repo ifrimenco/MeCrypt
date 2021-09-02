@@ -5,7 +5,7 @@ using System;
 
 namespace MeCrypt.DataAccess
 {
-    public class UnitOfWork // design pattern
+    public class UnitOfWork 
     {
         private readonly MeCryptContext Context;
 
@@ -15,7 +15,7 @@ namespace MeCrypt.DataAccess
         }
 
         // aici vin IRepositories
-        private IRepository<User> users; // asta parca facea ceva cu lazy, de documentat pentru document
+        private IRepository<User> users; 
         public IRepository<User> Users => users ?? (users = new BaseRepository<User>(Context));
 
         private IRepository<Role> roles;

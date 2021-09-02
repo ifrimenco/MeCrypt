@@ -5,12 +5,10 @@ using System;
 
 namespace SocializR.BusinessLogic.Implementation.Account
 {
-    public class SecretsProfile : Profile
+    public class MessagingProfile : Profile
     {
-        public SecretsProfile()
+        public MessagingProfile()
         {
-            CreateMap<Secret, SecretListItemModel>();
-            CreateMap<Secret, SecretDetailsModel>();
         }
     }
 }

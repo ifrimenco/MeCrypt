@@ -28,7 +28,7 @@ namespace MeCrypt.Controllers
         [HttpGet, Route("getSecrets")]
         public IActionResult GetSecrets()
         {
-            if (!HasPermission(PermissionTypes.Secrets_View))
+            if (!HasPermission(PermissionTypes.Secrets_Open))
             {
                 return Unauthorized();
             }
@@ -56,14 +56,14 @@ namespace MeCrypt.Controllers
         }
 
         [HttpGet, Route("getSecret/{secretId}")]
-        public IActionResult GetSecret([FromBody] GetSecretModel model) 
+        public IActionResult GetSecret(Guid secretId) 
         {
-            if (!HasPermission(PermissionTypes.Secrets_View))
+            if (!HasPermission(PermissionTypes.Secrets_Open))
             {
                 return Unauthorized();
             }
 
-            var secret = OnHerMajestySecretsService.DecryptSecret(model);
+            var secret = OnHerMajestySecretsService.GetSecret(secretId);
 
             if (secret == null)
             {
@@ -71,6 +71,19 @@ namespace MeCrypt.Controllers
             }
 
             return Ok(secret);
+        }
+
+        [HttpPost, Route("openSecret")]
+        public IActionResult OpenSecret([FromBody] OpenSecretModel model)
+        {
+            if (!HasPermission(PermissionTypes.Secrets_Open))
+            {
+                return Unauthorized();
+            }
+
+            var secret = OnHerMajestySecretsService.OpenSecret(model);
+            var test = Ok(secret);
+            return test ;
         }
     }
 }

@@ -10,6 +10,8 @@ GO
 
 MERGE INTO [User_Roles] AS [Target]
 USING (VALUES 
+
+	('90997D56-A5FC-4BD2-93C3-4F45AF3C63CE', 1)
 	('90997D56-A5FC-4BD2-93C3-4F45AF3C63CE', 2)
 ) AS [Source] ([UserId], [RoleId])
 ON ([Target].[UserId] = [Source].[UserId] AND [Target].[RoleId] = [Source].[RoleId])
@@ -17,5 +19,3 @@ WHEN NOT MATCHED THEN
  INSERT([UserId], [RoleId])
  VALUES([Source].[UserId], [Source].[RoleId]);
 GO
-
-
