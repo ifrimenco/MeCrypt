@@ -10,6 +10,7 @@ import { RegisterPage } from './components/Register';
 import { CreateSecret } from './components/secrets/CreateSecret';
 import { OpenSecret } from './components/secrets/OpenSecret';
 import { SecretsPage } from './components/secrets/SecretsPage';
+import { CreateRoom } from './components/chat/CreateRoom';
 import { Test } from './components/chat/Test';
 import * as Errors from './components/DefaultPages';
 
@@ -35,6 +36,7 @@ export default class App extends Component {
                     <Route path='/createSecret' component={CreateSecret} />
                     <Route path='/test' component={Test} />
                     <Route path='/openSecret/:secretId' component={OpenSecret} />
+                    <Route path='/createRoom' component={CreateRoom} />
                     <Route path="*" component={Errors.NotFound} />
                 </Switch>
             </Layout>

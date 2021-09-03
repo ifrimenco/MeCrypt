@@ -112,6 +112,7 @@ namespace MeCrypt
             services.AddScoped<UsersService>();
             services.AddScoped<AdminService>();
             services.AddScoped<OnHerMajestySecretsService>();
+            services.AddScoped<MessagingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

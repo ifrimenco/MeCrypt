@@ -9,6 +9,7 @@ namespace SocializR.BusinessLogic.Implementation.Account
     {
         public MessagingProfile()
         {
+            CreateMap<Room, RoomListItemModel>();
         }
     }
 }

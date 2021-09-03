@@ -42,5 +42,10 @@ namespace MeCrypt.DataAccess
         {
             Context.Set<TEntity>().RemoveRange(entities);
         }
+
+        public void InsertRange(IEnumerable<TEntity> entities)
+        {
+            Context.Set<TEntity>().AddRange(entities);
+        }
     }
 }

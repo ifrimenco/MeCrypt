@@ -36,3 +36,12 @@ code {
     width: 32px;
     height: 32px;
 }
+
+.userDropdownItem {
+    cursor:pointer;
+}
+
+.userDropdownItem :hover {
+    background-color:blue !important;
+    color: white !important;
+}

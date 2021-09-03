@@ -12,6 +12,13 @@ export const authenticationService = {
     logout,
     register,
     currentUser: currentUserSubject.asObservable(),
+    hasPermission(permission) {
+        if (currentUserSubject.value === null) return false;
+
+        return (currentUserSubject.value.permissions.find(number => number === permission));
+
+    },
+
     get hasUserEditingPermission() {
         if (currentUserSubject.value === null) return false;
 
@@ -24,7 +31,7 @@ function login(email, password) {
     var key = getNewKey();
     var publicKey = key.publicKey;
     var privateKey = key.privateKey;
-    debugger;
+
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

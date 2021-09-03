@@ -16,12 +16,37 @@ namespace MeCrypt.BusinessLogic
         {
         }
 
-        public IEnumerable<SecretListItemModel> GetSecrets()
+        public IEnumerable<RoomListItemModel> GetRooms()
         {
-            return UnitOfWork.Secrets.Get()
-                .Where(s => s.OpenerId == CurrentUser.Id)
-                .Select(secret =>
-                    Mapper.Map<Secret, SecretListItemModel>(secret));
+            return UnitOfWork.Rooms.Get()
+                .Select(room =>
+                    Mapper.Map<Room, RoomListItemModel>(room));
+        }
+
+        public void CreateRoom(CreateRoomModel model)
+        {
+            ExecuteInTransaction(uow =>
+            {
+                var room = new Room()
+                {
+                    CreatorId = CurrentUser.Id,
+                    Id = Guid.NewGuid(),
+                    MessageLifespan = 0, // de implementat
+                    Name = model.Name
+                };
+
+                uow.Rooms.Insert(room);
+                uow.SaveChanges();
+
+                var userRooms = model.Users.Select(userId => new UserRoom
+                {
+                    UserId = userId,
+                    RoomId = room.Id
+                });
+
+                uow.UserRooms.InsertRange(userRooms);
+                uow.SaveChanges();
+            });
         }
     }
 }

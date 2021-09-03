@@ -31,7 +31,6 @@ export const OpenSecret = (props) => {
         console.log(shares);
     }
 
-
     const deleteShare = (i) => {
         let s = shares;
         s.splice(i, 1);
@@ -41,7 +40,6 @@ export const OpenSecret = (props) => {
     }
 
     const openSecret = async (secretId, shares) => {
-        debugger;
         var correctData = true;
         for (let i = 0; i < shares.length; i++) {
             if (shares[i] == '' || shares[i] == 0 || shares[i] == null) {
@@ -51,7 +49,7 @@ export const OpenSecret = (props) => {
         }
         if (correctData) {
             setIncorrectData(false);
-            var returnedSecret = await secretsService.openSecret(secretId, shares)
+            var returnedSecret = await secretsService.openSecret(secretId, shares);
             setIsSubmitting(true);
             if (returnedSecret == "") {
                 setError(true);

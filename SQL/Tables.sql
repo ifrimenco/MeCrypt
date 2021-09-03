@@ -42,13 +42,11 @@ CREATE TABLE [Role_Permissions] (
 	CONSTRAINT FK_RolePermissions_Permissions FOREIGN KEY (PermissionId) REFERENCES [Permissions](Id)
 );
 DROP TABLE [Secrets];
+
 CREATE TABLE [Secrets] (
 	Id UNIQUEIDENTIFIER NOT NULL,	
-	OpenerId UNIQUEIDENTIFIER NOT NULL,
 	Title NVARCHAR(100) NOT NULL,
 	Content VARBINARY(MAX) NOT NULL,
-
-	CONSTRAINT FK_Secrets_Openers FOREIGN KEY (OpenerId) REFERENCES [Users](Id),
 )
 
 CREATE TABLE [Rooms] (

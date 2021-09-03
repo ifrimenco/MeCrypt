@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { usersService } from '../services'
 
-export class UsersPage extends Component {
+export class C extends Component {
     static displayName = UsersPage.name;
 
     constructor(props) {

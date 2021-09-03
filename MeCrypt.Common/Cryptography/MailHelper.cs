@@ -46,7 +46,7 @@ namespace MeCrypt.Common
 
             message.Subject = "Secret Shares Received";
 
-            message.Body = $"<h2>Here are your {shares.Count} secret shares for the secret titled {secretTitle}:</h2>";
+            message.Body = $"<h2>Here are your secret shares for the secret titled {secretTitle}:</h2>";
             
             for (int i = 0; i < sharesArray.Length; i++)
             {

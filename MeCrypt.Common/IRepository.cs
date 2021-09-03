@@ -12,5 +12,6 @@ namespace MeCrypt.Common
         TEntity Update(TEntity entitty);
         void Delete(TEntity entity);
         void DeleteRange(IEnumerable<TEntity> entities);
+        void InsertRange(IEnumerable<TEntity> entities);
     }
 }

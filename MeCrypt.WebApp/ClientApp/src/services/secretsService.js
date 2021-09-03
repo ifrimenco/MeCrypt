@@ -16,7 +16,7 @@ async function createSecret(content, title, minimumShares, userSecrets) {
         body: JSON.stringify({ title, content, minimumShares, userSecrets })
     };
 
-    debugger;
+
     const response = await fetch(`secrets/createSecret`, requestOptions);
     return response;
 }

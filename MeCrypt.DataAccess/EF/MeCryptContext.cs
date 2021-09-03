@@ -120,12 +120,6 @@ namespace MeCrypt.DataAccess.EF
                 entity.Property(e => e.Title)
                     .IsRequired()
                     .HasMaxLength(100);
-
-                entity.HasOne(d => d.Opener)
-                    .WithMany()
-                    .HasForeignKey(d => d.OpenerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Secrets_Openers");
             });
 
             modelBuilder.Entity<User>(entity =>

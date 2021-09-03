@@ -21,7 +21,6 @@ namespace MeCrypt.BusinessLogic
         public IEnumerable<SecretListItemModel> GetSecrets()
         {
             return UnitOfWork.Secrets.Get()
-                .Where(s => s.OpenerId == CurrentUser.Id)
                 .Select(secret =>
                     Mapper.Map<Secret, SecretListItemModel>(secret));
         }
@@ -41,7 +40,7 @@ namespace MeCrypt.BusinessLogic
                 if (share == "" || share == null)
                 {
                     return null;
-                } 
+                }
             }
 
             var content = UnitOfWork.Secrets.Get().Where(secret => secret.Id == model.SecretId).SingleOrDefault()?.Content;
@@ -53,23 +52,23 @@ namespace MeCrypt.BusinessLogic
 
             List<BigInteger> shares = model.Shares.Select(s => BigInteger.Parse(s)).ToList();
 
-            var key = SecretsHelper.GenerateSecret(shares).ToByteArray();
             try
             {
+                var key = SecretsHelper.GenerateSecret(shares).ToByteArray();
                 var decryptedContent = SymmetricEncryptionHelper.DecryptText(key, content);
 
                 // dupa aceea secretul este sters. Totusi, din frica unei alte blocari a contului mail de catre Microsoft,
                 // las implementarea acestei bucati pana dupa licenta pentru a putea demonstra functionalitatea componentei de partajare a secretelor
                 return decryptedContent;
             }
-            catch
+            catch (Exception e)
             {
                 return null;
             }
 
         }
 
-        
+
         public void CreateSecret(CreateSecretModel model)
         {
             ExecuteInTransaction(unitOfWork =>
@@ -85,16 +84,14 @@ namespace MeCrypt.BusinessLogic
                 {
                     Content = encryptedContent,
                     Title = model.Title,
-                    Id = Guid.NewGuid(),
-                    OpenerId = CurrentUser.Id,
+                    Id = Guid.NewGuid()
                 };
 
                 unitOfWork.Secrets.Insert(secret);
                 unitOfWork.SaveChanges();
 
                 var users = UnitOfWork.Users.Get().ToList();
-
-                var keyAsInteger = new BigInteger(key);
+                var keyAsInteger = (new BigInteger(key));
 
                 var nrShares = model.UserSecrets.Sum(us => us.Item2);
                 var shares = SecretsHelper.GenerateShares(keyAsInteger, nrShares, model.MinimumShares).ToArray(); // de adaugat minimumShares pe front

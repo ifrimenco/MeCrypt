@@ -1,9 +1,11 @@
+import { authHeader, authHeaderWithJson, handleResponse } from "../helpers";
 
 const crypto = require("crypto");
 
-export const encrpytionService = {
+export const messagingService = {
     encryptMessage,
-    decryptMessage
+    decryptMessage,
+    createRoom
 };
 
 async function encryptMessage(publicKey, data) {
@@ -34,4 +36,29 @@ async function decryptMessage(privateKey, data) {
     );
 
     return decryptedData.toString();
+}
+
+async function createRoom(name, users) {
+    const requestOptions = {
+        method: 'POST',
+        headers: authHeaderWithJson(),
+        body: JSON.stringify({ name, users })
+    }
+    const response = await fetch(`messages/createRoom`, requestOptions)
+        .then(handleResponse);
+
+    return response;
+}
+
+
+async function getRoom(roomId) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    }
+
+    const response = await fetch(`messages/getroom/${roomId}`, requestOptions)
+        .then(handleResponse);
+
+    return response;
 }

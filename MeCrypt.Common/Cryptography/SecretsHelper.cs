@@ -124,6 +124,12 @@ namespace MeCrypt.Common
 
             Numerator = Numerator / gcd;
             Denominator = Denominator / gcd;
+            
+            if (Denominator < 0 && Numerator > 0)
+            {
+                Denominator = -Denominator;
+                Numerator = -Numerator;
+            }
         }
 
         public static Fraction operator *(Fraction first, Fraction second)
