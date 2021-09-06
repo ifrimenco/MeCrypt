@@ -45,3 +45,33 @@ code {
     background-color:blue !important;
     color: white !important;
 }
+
+.roomsComponent {
+    width: 20%;
+    height: 100%;
+    left: 0px;
+    top: 55px; /*de rezolvat z-index*/
+    position: fixed;
+    z-index: -9999;
+    background-color: #edf7ff;
+    overflow-y: auto;
+}
+
+.navbar {
+    z-index: 555;
+    position: relative;
+}
+
+.chatInput {
+    position: fixed;
+    padding: 3px;
+    width: 75%;
+    border: none;
+    top: 90% !important;
+    left: 25%;
+    display: flex;
+}
+
+.inputBox {
+    width: 75%;
+}

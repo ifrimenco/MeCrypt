@@ -98,7 +98,7 @@ namespace MeCrypt.Controllers
             var claims = new ClaimsIdentity(new Claim[]
             {
                     new Claim("Id", user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.Email)
+                    new Claim(ClaimTypes.Name, user.Id.ToString())
             });
 
             user.Permissions.ForEach(permission => claims.AddClaim(new Claim("Permission", permission.ToString())));

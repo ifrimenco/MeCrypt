@@ -21,7 +21,7 @@ export const NavMenu = (props) => {
 
     return (
         <header>
-            <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
+            <Navbar className="navbar navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
                 <Container>
                     <NavbarBrand tag={Link} to="/">MeCrypt</NavbarBrand>
                     <ul className="navbar-nav flex-grow">

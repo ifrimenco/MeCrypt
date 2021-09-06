@@ -10,10 +10,10 @@ export const LoginPage = (props) => {
     const [isSubmitting, setIsSubmitting] = React.useState(false); // creeaza un state
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState(""); 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         setIsSubmitting(true);
 
-        authenticationService.login(email, password)
+        await authenticationService.login(email, password)
             .then(
                 user => {
                     window.location.reload();

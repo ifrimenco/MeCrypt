@@ -1,25 +1,22 @@
 import React, { useState } from 'react';
 
-const ChatInput = (props) => {
-    const [user, setUser] = useState('');
+export const ChatInput = (props) => {
     const [message, setMessage] = useState('');
 
-    const onSubmit = (e) => {
-        e.preventDefault();
-
-        const isUserProvided = user && user !== '';
-        const isMessageProvided = message && message !== '';
-
-        if (isUserProvided && isMessageProvided) {
-            props.sendMessage(user, message);
-        }
-        else {
-            alert('Please insert an user and a message.');
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            onSubmit(event);
         }
     }
 
-    const onUserUpdate = (e) => {
-        setUser(e.target.value);
+    const onSubmit = (event) => {
+        event.preventDefault();
+        const isMessageProvided = message && message !== '';
+
+        if (isMessageProvided) {
+            props.sendMessage(message);
+        }
+        setMessage('');
     }
 
     const onMessageUpdate = (e) => {
@@ -27,28 +24,19 @@ const ChatInput = (props) => {
     }
 
     return (
-        <form
+        <form className="chatInput"
+            onKeyPress={(event) => { handleKeyPress(event) }}
             onSubmit={onSubmit}>
-            <label htmlFor="user">User:</label>
-            <br />
-            <input
-                id="user"
-                name="user"
-                value={user}
-                onChange={onUserUpdate} />
-            <br />
-            <label htmlFor="message">Message:</label>
             <br />
             <input
                 type="text"
-                id="message"
+                className="inputBox"
                 name="message"
+                placeholder="Enter a message..."
                 value={message}
                 onChange={onMessageUpdate} />
             <br /><br />
-            <button>Submit</button>
+            <button type="button" className="btn btn-primary" onClick={(e) => { onSubmit(e)}}>Send</button>
         </form>
     )
 };
-
-export default ChatInput;

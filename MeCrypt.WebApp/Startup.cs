@@ -65,7 +65,11 @@ namespace MeCrypt
                 };
             });
 
-            services.AddSignalR();
+            services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = true;
+            });
+
             services.AddDbContext<MeCryptContext>(options =>
             {
                 options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]);
@@ -95,17 +99,6 @@ namespace MeCrypt
                 };
             });
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("ClientPermission", policy =>
-                {
-                    policy.AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .WithOrigins("https://localhost:44358")
-                        .AllowCredentials();
-                });
-            });
-
             services.AddScoped<ControllerDependencies>();
             services.AddScoped<ServiceDependencies>();
             services.AddScoped<UserAccountService>();
@@ -133,7 +126,6 @@ namespace MeCrypt
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
-            app.UseCors("ClientPermission");
             app.UseRouting();
 
             app.UseAuthentication();

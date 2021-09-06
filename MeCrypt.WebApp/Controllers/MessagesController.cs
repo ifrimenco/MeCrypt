@@ -46,7 +46,6 @@ namespace MeCrypt.Controllers
             try
             {
                 MessagingService.CreateRoom(model);
-                //OnHerMajestySecretsService.CreateSecret(model);
                 return Ok();
             }
 
@@ -54,6 +53,43 @@ namespace MeCrypt.Controllers
             {
                 return BadRequest();
             }
+        }
+
+        [HttpPost, Route("storeMessages")]
+        public IActionResult StoreMessages([FromBody] StoreMessageModel model)
+        {
+            if (!HasPermission(PermissionTypes.Messages_ReadWrite))
+            {
+                return Unauthorized();
+            }
+            try
+            {
+                MessagingService.StoreMessages(model);
+                return Ok();
+            }
+
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet, Route("getUsersForRoom/{roomId}")]
+        public IActionResult GetUsersForRoom(Guid roomId)
+        {
+            if (!HasPermission(PermissionTypes.Messages_ReadWrite))
+            {
+                return Unauthorized();
+            }
+
+            var users = MessagingService.GetUsersForRoom(roomId);
+
+            if (users == null)
+            {
+                return Unauthorized();
+            }
+
+            return Ok(users);
         }
     }
 }

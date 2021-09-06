@@ -52,7 +52,7 @@ export const CreateRoom = (props) => {
             .then(response => {
                 history.push('/');
             })
-        debugger;
+
     }
 
     return (

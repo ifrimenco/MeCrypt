@@ -5,6 +5,7 @@ namespace MeCrypt.WebApp.Code
 {
     public interface IChatClient
     {
-        Task ReceiveMessage(Message message);
+        Task ReceiveMessage(MessageReceived messageReceived);
+        Task TestSubscription(string message);
     }
 }
