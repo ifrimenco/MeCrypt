@@ -15,9 +15,12 @@ export const authenticationService = {
     register,
     currentUser: currentUserSubject.asObservable(),
     hasPermission,
+    isEmail,
+    isName,
+    validatePassword,
 
     get hasUserEditingPermission() {
-        if (currentUserSubject.value === null) return false;
+        if (currentUserSubject.value === null || currentUserSubject.value === "") return false;
 
         return (currentUserSubject.value.permissions.find(number => number === permissionTypes.Users_Update));
     },
@@ -30,8 +33,19 @@ export const authenticationService = {
     }
 };
 
+function isEmail(email) {
+    return /^([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22))*\x40([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d))*$/.test(email);
+};
+
+function isName(name) {
+    return /^[A-Za-z]-?[A-Za-z]?/.test(name);
+};
+
+function validatePassword(password) {
+    return /^(?=.*[A-Z])$/.test(password) && /^[a-zA-Z0-9]{8,}$/.test(password);
+};
 function hasPermission(permission) {
-    if (currentUserSubject.value === null) return false;
+    if (currentUserSubject.value === null || currentUserSubject.value === "") return false;
     return (currentUserSubject.value.permissions.find(number => number === permission));
 
 }
@@ -50,6 +64,7 @@ async function login(email, password) {
     return fetch(`https://localhost:44358/UserAccount/Login`, requestOptions)
         .then(handleLoginResponse)
         .then(user => {
+
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             localStorage.setItem('currentUser', JSON.stringify(user));
             localStorage.setItem('privateKey', privateKey);
@@ -57,7 +72,7 @@ async function login(email, password) {
             currentUserSubject.next(user);
 
             return user;
-        });
+        }, error => { return Promise.reject(error)});
 }
 
 

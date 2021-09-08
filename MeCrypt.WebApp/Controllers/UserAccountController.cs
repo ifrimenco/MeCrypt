@@ -37,13 +37,13 @@ namespace MeCrypt.Controllers
         {
             if (currentUser.IsAuthenticated)
             {
-                return BadRequest("User Already logged in");
+                return Forbid("User Already logged in");
             }
 
             var user = userAccountService.Login(model.Email, model.Password, model.PublicKey);
 
             if (user == null)
-                return BadRequest("Email or password is incorrect");
+                return BadRequest("Email or password incorrect");
 
             messagingService.DeleteMessages();
 

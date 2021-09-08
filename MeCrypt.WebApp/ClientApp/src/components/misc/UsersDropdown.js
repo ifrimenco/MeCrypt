@@ -46,7 +46,7 @@ export const UsersDropdown = (props) => {
         <>
             <label>Search Users</label>
 
-            <input name="user" autocomplete="off" type="text" value={searchText} onChange={(e) => { handleTextChange(e.target.value) }} className='form-control' />
+            <input name="user" autocomplete="off" type="text" value={searchText} onChange={(e) => { handleTextChange(e.target.value) }} className='userDropdown form-control' />
             {
                 filteredUsers.length > 0 &&
                 <div style={{ border: "1px solid black" }}>

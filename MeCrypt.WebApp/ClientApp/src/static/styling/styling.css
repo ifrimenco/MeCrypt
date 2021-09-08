@@ -7,10 +7,32 @@ a {
         text-decoration: none;
     }
 
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
 code {
     color: #E01A76;
 }
 
+.mecryptOk {
+    color: green;
+    padding: 10px 0;
+}
+
+.mecryptError {
+    padding: 10px 0;
+    color: red;
+    background: white;
+}
 option {
     text-align: center;
     padding-right: 5px;
@@ -227,6 +249,14 @@ option {
     position: relative;
 }
 
+.secretOpenedButton {
+    display: block;
+    margin: 50px 0px;
+    width: 40%;
+    height: 100px;
+    border-radius: 0;
+}
+
     .notLoggedButton:hover {
         background-color: #1b2f87;
         color: white !important;
@@ -234,10 +264,15 @@ option {
 
 
 .inputContainer {
-    width: 30%;
+    position: fixed;
+    top: 15%;
+    width: 15%;
     display: inline-block;
 }
 
+.userDropdown, .userDropdown * {
+    z-index: 1000;
+}
 .userDropdownItem {
     cursor: pointer;
     z-index: 500;
@@ -256,8 +291,9 @@ option {
 .createRoomTable {
     position: fixed;
     top: 15%;
-    left: 40%;
+    left: 45%;
     width: 50%;
+    text-align: center;
 }
 
 .createRoomSelectedUsers {

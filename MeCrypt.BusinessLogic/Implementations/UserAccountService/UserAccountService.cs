@@ -66,7 +66,7 @@ namespace MeCrypt.BusinessLogic
 
             if (user != null) 
             {
-                return user;
+                return null;
             }
 
             return ExecuteInTransaction(unitOfWork =>

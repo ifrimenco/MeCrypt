@@ -15,6 +15,8 @@ export const CreateRoom = (props) => {
     const [users, setUsers] = React.useState([]);
     const [currentUser, setCurrentUser] = React.useState();
     const [selectedUsers, setSelectedUsers] = React.useState([]);
+    const [isUsersNull, setIsUsersNull] = React.useState(false);
+    const [isNameNull, setIsNameNull] = React.useState(false);
     const currentUserId = React.useRef(authenticationService.currentUserValue.id)
 
     React.useEffect(() => {
@@ -59,6 +61,19 @@ export const CreateRoom = (props) => {
     }
 
     const onSubmit = async () => {
+        var usersNull = (selectedUsers === null || selectedUsers === undefined || selectedUsers.length === 0);
+        var nameNull = name === "" || name === undefined || name === null
+        if (usersNull) {
+            await setIsUsersNull(true);
+        }
+
+        if (nameNull) {
+            await setIsNameNull(true);
+        }
+
+        if (usersNull || nameNull) {
+            return;
+        }
 
         let userIds = selectedUsers.map(user => user.id);
         userIds.push(currentUserId.current);
@@ -84,20 +99,22 @@ export const CreateRoom = (props) => {
                         addUser={addUser}
                         setUsers={setUsers}
                     />
+                    {isNameNull && <h4 className="mecryptError">Room name can't be empty!</h4>}
+                    {isUsersNull && <h4 className="mecryptError">Please select at least one user</h4>}
                 </div>
                 <div class="createRoomSelectedUsers">
                     <table className='table createRoomTable table-striped' >
                         <thead>
                             <tr>
-                                <th>User</th>
-                                <th>Actions</th>
+                                <th className="col">User</th>
+                                <th className="col">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {selectedUsers.map((user, index) =>
                                 <tr key={index}>
-                                    <td>{user.firstName + " " + user.lastName}</td>
-                                    <td><button type="button" onClick={() => { unselectUser(user, index) }} className="deleteButton"></button></td>
+                                    <td className="col">{user.firstName + " " + user.lastName}</td>
+                                    <td className="col"><button type="button" onClick={() => { unselectUser(user, index) }} className="deleteButton"></button></td>
                                 </tr>
                             )}
                         </tbody>
