@@ -46,9 +46,9 @@ export const ChatPage = (props) => {
         }
 
         async function fetchData() {
-            var privateKey = await encryptionService.importPrivateKey(authenticationService.privateKey);
+            var privKey = await encryptionService.importPrivateKey(authenticationService.privateKey);
 
-            setPrivateKey(privateKey);
+            setPrivateKey(privKey);
 
             const room = await messagingService.getRooms()
 
@@ -70,60 +70,59 @@ export const ChatPage = (props) => {
 
     React.useEffect(() => {
         async function connectR() {
-            if (rooms === null || rooms.length === 0) return;
+                if (rooms === null || rooms.length === 0) return;
 
-            setActiveRoomId(rooms[activeRoomIndex].id);
-            const user = await messagingService.getUsersForRoom(rooms[activeRoomIndex].id);
+                setActiveRoomId(rooms[activeRoomIndex].id);
+                const user = await messagingService.getUsersForRoom(rooms[activeRoomIndex].id);
 
-            if (user == null) {
-                history.push('/404');
-            }
+                if (user == null) {
+                    history.push('/404');
+                }
 
-            const messagesStored = await messagingService.getMessagesForRoom(rooms[activeRoomIndex].id);
-            setMessages([]);
-            var msgs = []
-            if (messagesStored != null) {
-                for (let i = 0; i < messagesStored.length; i++) {
-                    let sender = user.find(u => u.id == messagesStored[i].senderId);
-                    let senderName = `${sender.firstName} ${sender.lastName}`;
-                    let msg = {
-                        senderName: senderName,
-                        message: messagesStored[i].cryptedContent,
-                        senderId: messagesStored[i].senderId,
-                        roomId: rooms[activeRoomIndex].id
+                const messagesStored = await messagingService.getMessagesForRoom(rooms[activeRoomIndex].id);
+                setMessages([]);
+                var msgs = []
+                if (messagesStored != null) {
+                    for (let i = 0; i < messagesStored.length; i++) {
+                        let sender = user.find(u => u.id == messagesStored[i].senderId);
+                        let senderName = `${sender.firstName} ${sender.lastName}`;
+                        let msg = {
+                            senderName: senderName,
+                            message: messagesStored[i].cryptedContent,
+                            senderId: messagesStored[i].senderId,
+                            roomId: rooms[activeRoomIndex].id
+                        }
+                        msgs.push(msg);
+                        msgs[i].message = await encryptionService.decryptMessage(privateKey, msgs[i].message);
                     }
-                    msgs.push(msg);
-                    msgs[i].message = await encryptionService.decryptMessage(privateKey, msgs[i].message);
+
+                    setMessages(msgs);
                 }
 
-                setMessages(msgs);
-            }
-
-
-            setUsers(user);
-            if (connection != null) {
-                connection.stop();
-            }
-
-            const newConnection = new HubConnectionBuilder()
-                .withUrl(`https://localhost:44358/hubs/chat/?roomId=${rooms[activeRoomIndex].id}&accessToken=${jwtToken.current}`, {
-                    skipNegotiation: true,
-                    transport: 1 // web sockets - de schimbat in enum
-                })
-                .withAutomaticReconnect()
-                .build();
-            setConnection(newConnection);
-
-            if (newConnection.connectionStarted) {
-                try {
+                setUsers(user);
+                if (connection != null) {
+                    connection.stop();
                 }
-                catch (e) {
-                    console.log(e);
+
+                const newConnection = new HubConnectionBuilder()
+                    .withUrl(`https://localhost:44358/hubs/chat/?accessToken=${jwtToken.current}`, {
+                        skipNegotiation: true,
+                        transport: 1 // web sockets - de schimbat in enum
+                    })
+                    .withAutomaticReconnect()
+                    .build();
+                setConnection(newConnection);
+
+                if (newConnection.connectionStarted) {
+                    try {
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
+                }
+                else {
                 }
             }
-            else {
-            }
-        }
 
         connectR();
 
@@ -229,8 +228,8 @@ export const ChatPage = (props) => {
                                 <>
                                     {
                                         index != activeRoomIndex
-                                            ? <li onClick={(e) => { updateCurrentRoom(index) }} key={index} className="roomItem list-group-item">{room.name}</li>
-                                            : <li onClick={(e) => { updateCurrentRoom(index) }} key={index} className="roomItem activeRoomItem list-group-item">{room.name}</li>
+                                            ? <li onClick={(e) => { updateCurrentRoom(index) }} key={index} className="roomItem list-group-item"><h6>{room.name}</h6></li>
+                                            : <li onClick={(e) => { updateCurrentRoom(index) }} key={index} className="roomItem activeRoomItem list-group-item"><h6>{room.name}</h6></li>
                                     }
                                 </>
                             )}

@@ -54,6 +54,9 @@ option {
     pointer-events: none !important;
 }
 
+.navbar-nav {
+    cursor: pointer;
+}
 .btn-primary {
     color: #fff;
     background-color: #1b2f87;
@@ -116,7 +119,6 @@ option {
 }
 
 .roomsComponent {
-    text-align: center;
     width: 20%;
     height: 100%;
     left: 0px;
@@ -129,6 +131,7 @@ option {
     .roomsComponent * {
         text-align: center;
     }
+    .roomsComponent 
 
 .roomsList {
     overflow-y: auto;
@@ -137,7 +140,12 @@ option {
 
 .roomItem {
     cursor: pointer;
-    height: 50px;
+}
+.roomItem * {
+    cursor: pointer;
+    height: 30px;
+    padding: 7px 0;
+    text-align: left !important;
 }
 
     .roomItem:hover {

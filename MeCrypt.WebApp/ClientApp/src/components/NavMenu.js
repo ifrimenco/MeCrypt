@@ -68,10 +68,10 @@ export const NavMenu = (props) => {
                             :
                             <>
                                 <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/login">Login</NavLink>
+                                    <NavLink tag={Link} className="" to="/login">Login</NavLink>
                                 </NavItem>
                                 <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/register">Register</NavLink>
+                                    <NavLink tag={Link} className="" to="/register">Register</NavLink>
                                 </NavItem>
                             </>}
                     </ul>

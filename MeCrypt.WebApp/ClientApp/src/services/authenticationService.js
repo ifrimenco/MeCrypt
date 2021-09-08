@@ -81,6 +81,7 @@ async function register(email, password, firstName, lastName) {
 
             localStorage.setItem('currentUser', JSON.stringify(user));
             localStorage.setItem('privateKey', privateKey);
+            localStorage.setItem('publicKey', publicKey);
             currentUserSubject.next(user);
 
             return user;
