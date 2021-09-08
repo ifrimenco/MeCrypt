@@ -19,6 +19,7 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MeCrypt
 {
@@ -43,7 +44,7 @@ namespace MeCrypt
                 options.AddMaps(typeof(Startup), typeof(BaseService));
             });
 
-            services.AddScoped<UnitOfWork>(); // de ce? - sa stiu sa explic
+            services.AddScoped<UnitOfWork>();
 
             var key = Encoding.ASCII.GetBytes(Configuration.GetValue<string>("AppSettings:Secret"));
 
@@ -62,6 +63,23 @@ namespace MeCrypt
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
                     ValidateAudience = false
+                };
+
+                jwt.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["accessToken"];
+
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            (path.StartsWithSegments("/hubs/chat")))
+                        {
+                            // Read the token out of the query string
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
 
@@ -128,6 +146,9 @@ namespace MeCrypt
 
             app.UseRouting();
 
+            app.UseBrowserLink();
+
+            //app.UseSignalRQueryStringAuth();
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -146,9 +167,39 @@ namespace MeCrypt
 
                 if (env.IsDevelopment())
                 {
+                    app.UseBrowserLink();
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+        }
+    }
+    public class SignalRQueryStringAuthMiddleware
+    {
+        private readonly RequestDelegate _next;
+
+        public SignalRQueryStringAuthMiddleware(RequestDelegate next)
+        {
+            _next = next;
+        }
+
+        // Convert incomming qs auth token to a Authorization header so the rest of the chain
+        // can authorize the request correctly
+        public async Task Invoke(HttpContext context)
+        {
+            if (context.Request.Headers["Connection"] == "Upgrade" &&
+                context.Request.Query.TryGetValue("accessToken", out var token))
+            {
+                context.Request.Headers.Add("Authorization", "Bearer " + token.First());
+            }
+            await _next.Invoke(context);
+        }
+    }
+
+    public static class SignalRQueryStringAuthExtensions
+    {
+        public static IApplicationBuilder UseSignalRQueryStringAuth(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<SignalRQueryStringAuthMiddleware>();
         }
     }
 }

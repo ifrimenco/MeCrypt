@@ -41,9 +41,9 @@ CREATE TABLE [Role_Permissions] (
 	CONSTRAINT FK_RolePermissions_Roles FOREIGN KEY (RoleId) REFERENCES [Roles](Id),
 	CONSTRAINT FK_RolePermissions_Permissions FOREIGN KEY (PermissionId) REFERENCES [Permissions](Id)
 );
-DROP TABLE [Secrets];
+DROP TABLE [MeCrypt].[dbo].[Secrets];
 
-CREATE TABLE [Secrets] (
+CREATE TABLE [MeCrypt].[dbo].[Secrets] (
 	Id UNIQUEIDENTIFIER NOT NULL,	
 	Title NVARCHAR(100) NOT NULL,
 	Content VARBINARY(MAX) NOT NULL,
@@ -68,8 +68,9 @@ CREATE TABLE [User_Rooms] (
 	CONSTRAINT FK_UserRooms_Rooms FOREIGN KEY (RoomId) REFERENCES [Rooms](Id),
 );
 
-
-CREATE TABLE [Messages] (
+DROP TABLE [MeCrypt].[dbo].[Messages];
+CREATE TABLE [MeCrypt].[dbo].[Messages] (
+	Id UNIQUEIDENTIFIER NOT NULL,
 	SenderId UNIQUEIDENTIFIER NOT NULL,
 	ReceiverId UNIQUEIDENTIFIER NOT NULL,
 	RoomId UNIQUEIDENTIFIER NOT NULL,
@@ -77,7 +78,7 @@ CREATE TABLE [Messages] (
 	DateTimeSent DATETIMEOFFSET NOT NULL, -- sa argumentez de ce am folosit DateTimeOffSet
 	Lifespan INT NOT NULL,
 
-	CONSTRAINT PK_Messages PRIMARY KEY (SenderId, ReceiverId, RoomId),
+	CONSTRAINT PK_Messages PRIMARY KEY(Id),
 	CONSTRAINT FK_Message_Sender FOREIGN KEY(SenderId, RoomId) REFERENCES [User_Rooms](UserId, RoomId),
 	CONSTRAINT FK_Message_Receiver FOREIGN KEY(ReceiverId, RoomId) REFERENCES [User_Rooms](UserId, RoomId)
 );

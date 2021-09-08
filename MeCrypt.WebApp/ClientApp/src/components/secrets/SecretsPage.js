@@ -22,22 +22,24 @@ export const SecretsPage = () => {
         loading
             ? <p><em>Loading...</em></p>
             :
-            <table className='table table-striped' aria-labelledby="tabelLabel">
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {secrets.map(secret =>
-                        <tr key={secret.id}>
-                            <td>{secret.title}</td>
-                            <td><Link to={`/openSecret/${secret.id}`}><button className="viewButton"></button></Link></td>
+            <div class="mainContainer">
+                <table className='table table-striped' aria-labelledby="tabelLabel">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Actions</th>
                         </tr>
-                    )}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {secrets.map(secret =>
+                            <tr key={secret.id}>
+                                <td>{secret.title}</td>
+                                <td><Link to={`/openSecret/${secret.id}`}><button className="viewButton"></button></Link></td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
     );
 
 }

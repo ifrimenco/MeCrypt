@@ -1,18 +1,24 @@
 import React from 'react';
 
-const Message = (props) => (
-    <div style={{ background: "#eee", borderRadius: '5px', padding: '0 10px' }}>
-        <p><strong>{props.userName}</strong> </p>
-        <br />
-        <p>{props.message}</p>
-    </div>
-);
+import { authenticationService } from '../../services';
 
 export const Messages = (props) => {
+    const currentUserId = React.useRef(authenticationService.currentUserValue.id);
     const messages = props.messages
-        .map(m => <Message
-            userName={m.userName}
-            message={m.message} />);
+        .map(m =>
+            <>
+                {m.senderId != currentUserId.current
+                    ? <div className="message">
+                        <p><strong>{m.senderName}</strong> </p>
+                        <p>{m.message}</p>
+                    </div>
+                    :
+                    <div className="currentUserMessage">
+                        <p><strong>{m.senderName}</strong> </p>
+                        <p>{m.message}</p>
+                    </div>
+                }
+            </>);
 
     return (
         <div>

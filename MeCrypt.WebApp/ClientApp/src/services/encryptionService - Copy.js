@@ -155,7 +155,6 @@ async function decryptMessage(key, ciphertext) {
         );
     }
     catch (e) {
-        debugger;
     }
     return decode(decrypted);
 }
@@ -178,7 +177,6 @@ async function encryptMessage(key, message) {
         encoded
     );
 
-    debugger;
     var x = decode(ciphertext);
     var y = encode(x);
 
@@ -186,7 +184,6 @@ async function encryptMessage(key, message) {
 }
 
 async function testEncryption() {
-    debugger;
     let message = "AAAAAA";
     let key = await getNewKey();
 
@@ -199,5 +196,4 @@ async function testEncryption() {
     let encrypted = await encryptMessage(importedPublicKey, message);
 
     let decrypted = await decryptMessage(importedPrivateKey, encrypted);
-    debugger;
 }

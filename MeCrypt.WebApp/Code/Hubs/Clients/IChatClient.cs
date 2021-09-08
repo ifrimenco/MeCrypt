@@ -7,5 +7,6 @@ namespace MeCrypt.WebApp.Code
     {
         Task ReceiveMessage(MessageReceived messageReceived);
         Task TestSubscription(string message);
+        Task TriggerAddUser(UserMsg userMsg);
     }
 }

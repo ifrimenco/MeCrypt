@@ -8,6 +8,7 @@ namespace MeCrypt.DataAccess.EF.Entities
 {
     public partial class Message : IEntity
     {
+        public Guid Id { get; set; }
         public Guid SenderId { get; set; }
         public Guid ReceiverId { get; set; }
         public Guid RoomId { get; set; }

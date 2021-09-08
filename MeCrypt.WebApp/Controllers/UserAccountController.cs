@@ -22,11 +22,13 @@ namespace MeCrypt.Controllers
     {
 
 
-        private readonly UserAccountService Service;
-        public UserAccountController(ControllerDependencies dependencies, UserAccountService service)
+        private readonly UserAccountService userAccountService;
+        private readonly MessagingService messagingService;
+        public UserAccountController(ControllerDependencies dependencies, UserAccountService userAccountService, MessagingService messagingService)
           : base(dependencies)
         {
-            this.Service = service;
+            this.userAccountService = userAccountService;
+            this.messagingService = messagingService;
         }
 
         [AllowAnonymous]
@@ -38,10 +40,12 @@ namespace MeCrypt.Controllers
                 return BadRequest("User Already logged in");
             }
 
-            var user = Service.Login(model.Email, model.Password, model.PublicKey);
+            var user = userAccountService.Login(model.Email, model.Password, model.PublicKey);
 
             if (user == null)
                 return BadRequest("Email or password is incorrect");
+
+            messagingService.DeleteMessages();
 
             // return basic user info (without password) and token to store client side
             return Ok(new
@@ -53,6 +57,20 @@ namespace MeCrypt.Controllers
                 Permissions = user.Permissions,
                 Token = LogIn(user)
             });
+        }
+
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            try
+            {
+                messagingService.DeleteMessages();
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
         [AllowAnonymous]
         [HttpPost("Register")]
@@ -66,14 +84,14 @@ namespace MeCrypt.Controllers
                 }
 
                 // save 
-                var user = Service.Register(model);
+                var user = userAccountService.Register(model);
 
                 if (user == null)
                 {
                     return BadRequest("E-mail Already Used!");
                 }
 
-                var userDto = Service.Login(model.Email, model.Password, model.PublicKey);
+                var userDto = userAccountService.Login(model.Email, model.Password, model.PublicKey);
                 return Ok(new
                 {
                     Id = userDto.Id,

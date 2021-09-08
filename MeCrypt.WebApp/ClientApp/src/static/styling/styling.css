@@ -1,17 +1,72 @@
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+    color: #0366d6;
 }
 
+    a:hover {
+        text-decoration: none;
+    }
+
 code {
-  color: #E01A76;
+    color: #E01A76;
+}
+
+.mainContainer {
+    position: relative;
+    top: 80px;
+}
+
+.navbar-container {
+    max-width: 2500px !important;
+}
+
+.btn, .nav-item {
+    transition: 0.3s;
+}
+.navbar * {
+    color: black;
+}
+.nav-item {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding: 0.5rem 0.5rem;
+}
+
+    .nav-item:hover {
+        background-color: #1b2f87;
+        color: white !important;
+    }
+    .nav-item:hover * {
+        color: white;
+    }
+
+#no-hover {
+    display: block;
+    padding-right: 20px;
+    pointer-events: none !important;
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #1b2f87;
+    border-color: #1861ac;
 }
+    .btn-primary:hover {
+        background-color: #111e59 !important;
+        color: white !important;
+    }
+.navbar, header {
+    position: fixed !important;
+    width: 100%;
+    z-index: 999;
+    opacity: 1;
+    background-color: #f5f6f7;
+    height: 55px;
+}
+
+    .navbar * {
+        z-index: 999;
+    }
 
 .editButton {
     background: url(../resources/editButton.png) no-repeat;
@@ -37,35 +92,44 @@ code {
     height: 32px;
 }
 
-.userDropdownItem {
-    cursor:pointer;
-}
-
-.userDropdownItem :hover {
-    background-color:blue !important;
-    color: white !important;
-}
-
 .roomsComponent {
+    text-align: center;
     width: 20%;
     height: 100%;
     left: 0px;
-    top: 55px; /*de rezolvat z-index*/
+    border-top-right-radius: 0px !important;
+    top: 54px; /*de rezolvat z-index*/
     position: fixed;
-    z-index: -9999;
-    background-color: #edf7ff;
-    overflow-y: auto;
+    background-color: #f5f6f7;
 }
 
-.navbar {
-    z-index: 555;
-    position: relative;
+    .roomsComponent * {
+        text-align: center;
+    }
+
+.roomsList {
+    overflow-y: auto;
+    height: 80%;
+}
+
+.roomItem {
+    cursor: pointer;
+    height: 50px;
+}
+
+    .roomItem:hover {
+        background: #1b2f87;
+        color: white;
+    }
+
+.activeRoomItem {
+    background-color: #aab1b5;
 }
 
 .chatInput {
     position: fixed;
     padding: 3px;
-    width: 75%;
+    width: 80%;
     border: none;
     top: 90% !important;
     left: 25%;
@@ -73,5 +137,102 @@ code {
 }
 
 .inputBox {
-    width: 75%;
+    width: 80%;
+}
+
+.message {
+    background: #eeeeee;
+    border-radius: 5px;
+    float: left;
+    padding: 0 10px;
+    left: 3%;
+    width: 65%;
+    margin: 7px 0px 7px 0px;
+    position: relative;
+}
+
+.currentUserMessage {
+    background: #405ec9;
+    border-radius: 5px;
+    margin: 7px 0px 7px 0px;
+    color: white;
+    padding: 0 10px;
+    right: 3%;
+    position: relative;
+    float: right;
+    width: 65%;
+}
+
+.chatWindow {
+    top: 12%;
+    left: 25%;
+    position: fixed;
+    width: 67%;
+    height: 78%;
+    overflow-y: auto;
+}
+
+.roomTitle {
+    width: 100%;
+    z-index: 998;
+    position: fixed;
+    left: 25%;
+    top: 55px;
+    background-color: white;
+}
+
+.notLoggedIn {
+    height: 60%;
+}
+
+.notLoggedButton {
+    display: block;
+    margin: 50px;
+    width: 40%;
+    height: 100px;
+    left: 20%;
+    top: 50%;
+    border-radius: 0;
+    position: relative;
+}
+    .notLoggedButton:hover {
+        background-color: #1b2f87;
+        color: white !important;
+    }
+
+
+.usersDropdown {
+    width: 30%;
+    display: inline-block;
+}
+
+.userDropdownItem {
+    cursor: pointer;
+    z-index: 500;
+}
+
+    .userDropdownItem:hover {
+        background-color: #1b2f87 !important;
+        color: white !important;
+    }
+
+.createRoom {
+    display: flex;
+    height: 70%;
+}
+.createRoomTable {
+    position: fixed;
+    top: 15%;
+    left: 40%;
+    width: 50%;
+}
+
+.createRoomSelectedUsers {
+    width: 55%;
+    padding-left: 50px;
+}
+
+.submitCreateRoom {
+    position: fixed;
+    bottom: 5%;
 }

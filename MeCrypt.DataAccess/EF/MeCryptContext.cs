@@ -43,7 +43,7 @@ namespace MeCrypt.DataAccess.EF
 
             modelBuilder.Entity<Message>(entity =>
             {
-                entity.HasKey(e => new { e.SenderId, e.ReceiverId, e.RoomId });
+                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.CryptedContent).IsRequired();
 

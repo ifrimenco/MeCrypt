@@ -29,6 +29,7 @@ export const ChatInput = (props) => {
             onSubmit={onSubmit}>
             <br />
             <input
+                autocomplete="off"
                 type="text"
                 className="inputBox"
                 name="message"

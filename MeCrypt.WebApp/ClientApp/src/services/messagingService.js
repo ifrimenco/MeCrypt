@@ -3,46 +3,12 @@ import { authHeader, authHeaderWithJson, handleResponse } from "../helpers";
 const crypto = require("crypto");
 
 export const messagingService = {
-    encryptMessage,
-    decryptMessage,
     createRoom,
     getRooms,
-    getUsersForRoom
+    getUsersForRoom,
+    getMessagesForRoom,
+    storeMessages
 };
-
-function encryptMessage(publicKey, data) {
-    const encryptedData = crypto.publicEncrypt(
-        {
-            key: publicKey,
-            padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-            oaepHash: "sha256",
-        },
-        // We convert the data string to a buffer using `Buffer.from`
-        Buffer.from(data)
-    );
-
-    return encryptedData.toString("base64");
-}
-
-function decryptMessage(privateKey, data) {
-    try {
-        const decryptedData = crypto.privateDecrypt(
-            {
-                key: privateKey,
-                // In order to decrypt the data, we need to specify the
-                // same hashing function and padding scheme that we used to
-                // encrypt the data in the previous step
-                padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-                oaepHash: "sha256",
-            },
-            data
-        );
-        return decryptedData.toString();
-    }
-    catch (e) {
-        debugger;
-    }
-}
 
 async function createRoom(name, users) {
     const requestOptions = {
@@ -82,3 +48,38 @@ async function getUsersForRoom(roomId) {
 
     return response;
 }
+
+async function storeMessages(messages, users, roomId) {
+    var userMessages = [];
+
+    for (let i = 0; i < messages.length; i++) {
+        userMessages.push({
+            item1: users[i],
+            item2: messages[i]
+        });
+    }
+
+    const requestOptions = {
+        method: 'POST',
+        headers: authHeaderWithJson(),
+        body: JSON.stringify({ roomId, userMessages })
+    };
+
+    const response = await fetch(`messages/storeMessages`, requestOptions)
+        .then(handleResponse);
+
+    return response;
+}
+
+async function getMessagesForRoom(roomId) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    const response = await fetch(`messages/getMessagesForRoom/${roomId}`, requestOptions)
+        .then(handleResponse)
+
+    return response;
+}
+

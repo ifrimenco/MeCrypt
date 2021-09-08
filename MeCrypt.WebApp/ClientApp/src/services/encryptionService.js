@@ -1,6 +1,5 @@
 
 export const encryptionService = {
-    testEncryption,
     exportPublicKey,
     exportPrivateKey,
     importPrivateKey,
@@ -151,23 +150,5 @@ async function encryptMessage(key, message) {
     );
 
     var str = ab2str(ciphertext);
-    debugger;
     return str;
-}
-
-async function testEncryption() {
-    debugger;
-    let message = "AAAAAA";
-    let key = await getNewKey();
-
-    let exportedPublicKey = await exportPublicKey(key.publicKey);
-    let exportedPrivateKey = await exportPrivateKey(key.privateKey);
-
-    let importedPublicKey = await importPublicKey(exportedPublicKey);
-    let importedPrivateKey = await importPrivateKey(exportedPrivateKey);
-
-    let encrypted = await encryptMessage(importedPublicKey, message);
-
-    let decrypted = await decryptMessage(importedPrivateKey, encrypted);
-    debugger;
 }

@@ -23,12 +23,59 @@ namespace MeCrypt.BusinessLogic
                 .Include(room => room.UserRooms)
                 .ToList();
 
-            var filteredRooms = rooms
+            var filteredRooms = new List<Room>();
+
+            foreach (var room in rooms)
+            {
+                var ur = room.UserRooms
+                    .Where(ur => ur.UserId == CurrentUser.Id);
+
+                if (ur.Count() > 0)
+                {
+                    filteredRooms.Add(room);
+                }
+            }
+
+            var f = rooms
                 .Where(room => (room.UserRooms
-                    .Select(ur => ur.UserId == CurrentUser.Id) != null));
+                    .Where(ur => ur.UserId == CurrentUser.Id) != null));
 
             return filteredRooms.Select(room =>
                 Mapper.Map<Room, RoomListItemModel>(room));
+        }
+
+        public IEnumerable<UserRoomListItemModel> GetUsersForRoom(Guid roomId)
+        {
+            var users = UnitOfWork.Users.Get()
+                .Include(user => user.UserRooms)
+                .ToList();
+
+            var filteredUsers = new List<User>();
+
+            foreach (var user in users)
+            {
+                var ur = user.UserRooms
+                    .Where(ur => ur.RoomId == roomId);
+
+                if (ur.Count() > 0)
+                {
+                    filteredUsers.Add(user);
+                }
+            }
+
+            return filteredUsers.Select(user =>
+                Mapper.Map<User, UserRoomListItemModel>(user));
+
+            var currentUser = filteredUsers
+                .FirstOrDefault(u => u.Id == CurrentUser.Id);
+
+            if (currentUser == null)
+            {
+                return null;
+            }
+
+            return filteredUsers.Select(user =>
+                Mapper.Map<User, UserRoomListItemModel>(user));
         }
 
         public void CreateRoom(CreateRoomModel model)
@@ -63,6 +110,7 @@ namespace MeCrypt.BusinessLogic
             {
                 var messages = model.UserMessages.Select(um => new Message()
                 {
+                    Id = Guid.NewGuid(),
                     RoomId = model.RoomId,
                     SenderId = CurrentUser.Id,
                     ReceiverId = um.Item1,
@@ -70,32 +118,41 @@ namespace MeCrypt.BusinessLogic
                     DateTimeSent = DateTimeOffset.Now,
                     Lifespan = 0
                 });
+                foreach (var message in messages)
+                {
+                    try
+                    {
+                        uow.Messages.Insert(message);
+                        uow.SaveChanges();
+                    }
+                    catch (Exception e)
+                    {
 
-                uow.Messages.InsertRange(messages);
-                uow.SaveChanges();
+                    }
+                }
+
             });
         }
-
-        public IEnumerable<UserRoomListItemModel> GetUsersForRoom(Guid RoomId)
+        public IEnumerable<MessageListItemModel> GetMessagesForRoom(Guid roomId)
         {
-            var users = UnitOfWork.Users.Get()
-                .Include(user => user.UserRooms)
-                .ToList();
+            var messages = UnitOfWork.Messages.Get()
+                .Where(message => message.RoomId == roomId && message.ReceiverId == CurrentUser.Id)
+                .OrderBy(message => message.DateTimeSent)
+                .Select(message => Mapper.Map<Message, MessageListItemModel>(message));
 
-            var filteredUsers = users
-                .Where(user => (user.UserRooms
-                    .Select(ur => ur.RoomId == CurrentUser.Id) != null));
+            return messages;
+        }
 
-            var currentUser = filteredUsers
-                .FirstOrDefault(u => u.Id == CurrentUser.Id);
-
-            if (currentUser == null)
+        public void DeleteMessages()
+        {
+            ExecuteInTransaction(unitOfWork =>
             {
-                return null;
-            }
+                var messages = UnitOfWork.Messages.Get()
+                    .Where(message => message.ReceiverId == CurrentUser.Id);
 
-            return filteredUsers.Select(user =>
-                Mapper.Map<User, UserRoomListItemModel>(user));
+                unitOfWork.Messages.DeleteRange(messages);
+                unitOfWork.SaveChanges();
+            });
         }
     }
 }

@@ -11,6 +11,7 @@ namespace SocializR.BusinessLogic.Implementation.Account
         {
             CreateMap<Room, RoomListItemModel>();
             CreateMap<User, UserRoomListItemModel>();
+            CreateMap<Message, MessageListItemModel>();
         }
     }
 }

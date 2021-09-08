@@ -13,10 +13,10 @@ export const RegisterPage = (props) => {
     const [firstName, setFirstName] = React.useState("");
     const [lastName, setLastName] = React.useState("");
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         setIsSubmitting(true);
 
-        authenticationService.register(email, password, firstName, lastName)
+        await authenticationService.register(email, password, firstName, lastName)
             .then(
                 user => {
                     window.location.reload();

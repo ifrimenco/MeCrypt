@@ -91,5 +91,16 @@ namespace MeCrypt.Controllers
 
             return Ok(users);
         }
+
+        [HttpGet, Route("getMessagesForRoom/{roomId}")]
+        public IActionResult GetMessagesForRoom(Guid roomId)
+        {
+            if (!HasPermission(PermissionTypes.Messages_ReadWrite))
+            {
+                return Unauthorized();
+            }
+
+            return Ok(MessagingService.GetMessagesForRoom(roomId));
+        }
     }
 }

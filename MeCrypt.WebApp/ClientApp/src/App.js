@@ -17,18 +17,16 @@ import * as Errors from './components/DefaultPages';
 
 import './static/styling/styling.css'
 
-export default class App extends Component {
-    static displayName = App.name;
+const App = () => {
 
-    render() {
         return (
             <Layout>
                 <Switch>
                     <Route exact path='/' component={Home} />
                     <Route path='/fetch-data' component={FetchData} />
                     <Route path='/adminPage' component={UsersPage} />
-                    <Route path='/loginPage' component={LoginPage} />
-                    <Route path='/registerPage' component={RegisterPage} />
+                    <Route path='/login' component={LoginPage} />
+                    <Route path='/register' component={RegisterPage} />
                     <Route path='/editUser/:userId' component={EditUser} />
                     <Route path='/unauthorized' component={Errors.Unauthorized} />
                     <Route path='/forbidden' component={Errors.Forbidden} />
@@ -43,5 +41,7 @@ export default class App extends Component {
                 </Switch>
             </Layout>
         );
-    }
+    
 }
+
+export default App;

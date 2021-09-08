@@ -49,7 +49,7 @@ export const EditUser = (props) => {
     return (
         loading
             ? <p><em>Loading...</em></p>
-            : <div className="container">
+            : <div className="mainContainer container">
                 <h2>{`${user.firstName} ${user.lastName}`}</h2>
                 <p>E-mail: {user.email}</p>
                 <div className="btn-group form-group">
