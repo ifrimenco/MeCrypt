@@ -26,9 +26,7 @@ export const UsersDropdown = (props) => {
     const handleUserClick = (e) => {
         var index = parseInt(e.target.getAttribute("data-key"));
         let userId = filteredUsers[index].id;
-        var f = [...filteredUsers];
-        f.splice(index, 1);
-        setFilteredUsers(f)
+
         let users = props.users;
         let user;
         for (let i = 0; i < users.length; i += 1) {

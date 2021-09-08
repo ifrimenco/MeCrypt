@@ -151,10 +151,8 @@ export const ChatPage = (props) => {
                             console.log(message);
                         });
 
-                        connection.on('ReceiveMessage', message => {
-                            if (message.roomId === rooms[activeRoomIndex].id) {
-                                setLatestMessage(message);
-                            }
+                        connection.on('ReceiveMessage', message => { // if message.roomId === currentRoomId...
+                            setLatestMessage(message);
                         });
 
                         connection.on('TriggerAddUser', (userMsg) => {

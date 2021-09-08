@@ -34,7 +34,9 @@ export const CreateRoom = (props) => {
             if (index > -1) {
                 usersFromServer.splice(index, 1);
             }
-
+            else {
+                history.push('/unauthorized');
+            }
             await setUsers(usersFromServer);
         }
 
@@ -44,7 +46,6 @@ export const CreateRoom = (props) => {
         var newSelectedUsers = [...selectedUsers];
         newSelectedUsers.push(user);
         setSelectedUsers(newSelectedUsers);
-        console.log(selectedUsers);
     }
 
     const unselectUser = (user, index) => {
@@ -56,6 +57,7 @@ export const CreateRoom = (props) => {
         setSelectedUsers(newSelectedUsers);
         setUsers(newUsers);
     }
+
     const onSubmit = async () => {
 
         let userIds = selectedUsers.map(user => user.id);
@@ -71,7 +73,7 @@ export const CreateRoom = (props) => {
     return (
         <div>
             <h2>Create Room</h2>
-            <div class="createRoom">
+            <div class="inputContainer">
                 <div className="usersDropdown">
                     <div className="form-group">
                         <label htmlFor="name">Room Name</label>
@@ -103,7 +105,7 @@ export const CreateRoom = (props) => {
                 </div>
             </div>
             <div className="form-group submitCreateRoom">
-                <button type="button" onClick={onSubmit} className="btn btn-primary" disabled={isSubmitting}>Create Room</button>
+                <button type="button" onClick={onSubmit} className="btn btn-lg btn-primary" disabled={isSubmitting}>Create Room</button>
                 {isSubmitting &&
                     <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
                 }
