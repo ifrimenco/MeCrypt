@@ -101,7 +101,7 @@ export const ChatPage = (props) => {
 
                 setUsers(user);
                 if (connection != null) {
-                    connection.stop();
+                    await connection.stop();
                 }
 
                 const newConnection = new HubConnectionBuilder()
